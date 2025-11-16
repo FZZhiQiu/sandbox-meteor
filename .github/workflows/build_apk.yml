@@ -34,6 +34,7 @@ jobs:
       with:
         gradle-version: 8.4
 
+    # 简化缓存配置以避免400错误
     - name: Cache Gradle dependencies
       uses: actions/cache@v4
       with:
@@ -41,9 +42,9 @@ jobs:
           ~/.gradle/caches
           ~/.gradle/wrapper
           !~/.gradle/caches/build-cache-*
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        key: gradle-8.4-${{ runner.os }}
         restore-keys: |
-          ${{ runner.os }}-gradle-
+          gradle-8.4-
 
     - name: Build APK (no tests/lint)
       run: |
@@ -74,4 +75,4 @@ jobs:
       run: |
         echo "Build completed!"
         echo "APK Size: ${{ steps.apk_url.outputs.apk_size }}"
-        echo "APK Name: ${{ steps.apk_url.outputs.apk_name }}"
+        echo "APK Name: ${{ steps.apk_url.outputs.apk_name }}
