@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: thyrlian/android-sdk:latest
     
     steps:
     - name: Checkout code
@@ -21,17 +23,6 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        packages: tools platform-tools build-tools-34.0.0 cmake-3.22.1
-        accept-android-sdk-licenses: true
-
-    - name: Accept additional Android licenses
-      run: |
-        yes | sdkmanager "add-ons;addon-google_tv_addon-google-19" || true
-        yes | sdkmanager --licenses || true
 
     - name: Make gradlew executable
       run: chmod +x ./gradlew
