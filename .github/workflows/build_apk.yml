@@ -29,14 +29,18 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
-      with:
-        gradle-version: 8.4
+    - name: Download and install Gradle 8.4
+      run: |
+        wget https://services.gradle.org/distributions/gradle-8.4-bin.zip
+        unzip gradle-8.4-bin.zip
+        export GRADLE_HOME=$(pwd)/gradle-8.4
+        export PATH=$PATH:$GRADLE_HOME/bin
+        echo "GRADLE_HOME=$(pwd)/gradle-8.4" >> $GITHUB_ENV
+        echo "$(pwd)/gradle-8.4/bin" >> $GITHUB_PATH
 
     - name: Build APK (no tests/lint)
       run: |
-        ./gradlew assembleDebug --no-daemon -x test -x lint -x lintVitalRelease
+        ./gradlew assembleDebug --no-daemon --gradle-user-home=$(pwd)/.gradle -x test -x lint -x lintVitalRelease
       env:
         JAVA_OPTS: -Xmx2048m
 
