@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import com.sandbox.radar.ui.ToolbarView;
 import com.sandbox.radar.ui.DashboardView;
@@ -45,7 +46,7 @@ public class MainActivity extends Activity {
             ViewGroup.LayoutParams.WRAP_CONTENT
         );
         toolbarParams.setMargins(0, 20, 20, 0); // 右上角位置
-        toolbarParams.gravity = FrameLayout.END | FrameLayout.TOP;
+        toolbarParams.gravity = Gravity.END | Gravity.TOP;
         
         mainLayout.addView(toolbarView, toolbarParams);
         
@@ -55,7 +56,7 @@ public class MainActivity extends Activity {
             ViewGroup.LayoutParams.MATCH_PARENT,
             100 // 高度100dp
         );
-        dashboardParams.gravity = FrameLayout.BOTTOM;
+        dashboardParams.gravity = Gravity.BOTTOM;
         
         mainLayout.addView(dashboardView, dashboardParams);
         
@@ -74,8 +75,8 @@ public class MainActivity extends Activity {
         });
         
         // 更新仪表板初始数据
-        simulationController.updateRainfall(0.0f);
-        simulationController.updateResources(100);
+        simulationController.updateRainfall();
+        simulationController.updateResources();
         
         Log.i(TAG, "Sandbox Radar 60 FPS started successfully");
     }
