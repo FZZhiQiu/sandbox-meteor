@@ -8,8 +8,8 @@ option(ENABLE_60FPS "Enable 60 FPS interpolation" ON)
 
 # 查找所有源文件
 file(GLOB_RECURSE LIB_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../sandbox-radar/lib/*.cc"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../sandbox-radar/lib/**/*.cc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../sandbox-radar/lib/*.cc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../sandbox-radar/lib/**/*.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/interpolate/*.cc"
 )
@@ -24,7 +24,7 @@ add_library(sandbox_radar SHARED
 
 # 包含头文件目录
 target_include_directories(sandbox_radar PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../sandbox-radar"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../sandbox-radar"
     "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
