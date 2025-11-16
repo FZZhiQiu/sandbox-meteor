@@ -25,6 +25,7 @@ add_library(sandbox_radar SHARED
 # 包含头文件目录
 target_include_directories(sandbox_radar PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../sandbox-radar"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../sandbox-radar/lib"
     "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
