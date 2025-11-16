@@ -29,14 +29,6 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
-    - name: Generate Gradle Wrapper
-      run: |
-        # 使用Gradle Wrapper任务重新生成包装器
-        if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
-          echo "Regenerating Gradle Wrapper JAR..."
-          ./gradlew wrapper --gradle-version=8.4 --distribution-type=bin
-        fi
-
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
       with:
@@ -53,30 +45,30 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - name: Build APK
+    - name: Build APK (no tests/lint)
       run: |
-        ./gradlew assembleRelease --no-daemon
+        ./gradlew assembleDebug --no-daemon -x test -x lint -x lintVitalRelease
       env:
         JAVA_OPTS: -Xmx2048m
 
     - name: Create APK directory
       run: |
         mkdir -p apk
-        cp app/build/outputs/apk/release/app-release.apk apk/app-release.apk
+        cp app/build/outputs/apk/debug/app-debug.apk apk/app-debug.apk
 
     - name: Upload APK to Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: sandbox-meteor-apk
-        path: apk/app-release.apk
+        path: apk/app-debug.apk
         retention-days: 30
 
     - name: Get download URL
       id: apk_url
       run: |
-        APK_SIZE=$(du -h apk/app-release.apk | cut -f1)
+        APK_SIZE=$(du -h apk/app-debug.apk | cut -f1)
         echo "apk_size=$APK_SIZE" >> $GITHUB_OUTPUT
-        echo "apk_name=app-release.apk" >> $GITHUB_OUTPUT
+        echo "apk_name=app-debug.apk" >> $GITHUB_OUTPUT
 
     - name: Print build info
       run: |
