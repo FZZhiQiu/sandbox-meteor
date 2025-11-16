@@ -1,0 +1,4 @@
+/data/data/com.termux/files/home/happy/android-apk/build/CMakeFiles/sandbox_radar.dir
+/data/data/com.termux/files/home/happy/android-apk/build/CMakeFiles/sandbox_meteor.dir
+/data/data/com.termux/files/home/happy/android-apk/build/CMakeFiles/edit_cache.dir
+/data/data/com.termux/files/home/happy/android-apk/build/CMakeFiles/rebuild_cache.dir
