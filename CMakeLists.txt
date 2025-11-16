@@ -36,7 +36,9 @@ target_include_directories(sandbox_radar PRIVATE ${JNI_INCLUDE_DIRS})
 
 # 链接库
 target_link_libraries(sandbox_radar
-    # 添加所需的库
+    ${JNI_LIBRARIES}
+    log
+    android
 )
 
 # 主可执行文件
