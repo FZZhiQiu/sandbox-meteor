@@ -23,14 +23,12 @@ jobs:
         java-version: '17'
 
     - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
+      uses: android/gradle-actions/setup@v3
       with:
-        packages: tools platform-tools build-tools-34.0.0 cmake-3.22.1 ndk-bundle
-        accept-android-sdk-licenses: true
-
-    - name: Accept Android Licenses
-      run: |
-        yes | sdkmanager --licenses || true
+        android-api-level: 34
+        build-tools-version: '34.0.0'
+        cmake-version: '3.22.1'
+        ndk-version: '25.2.9519653'
 
     - name: Make gradlew executable
       run: chmod +x ./gradlew
