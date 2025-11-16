@@ -34,18 +34,6 @@ jobs:
       with:
         gradle-version: 8.4
 
-    # 简化缓存配置以避免400错误
-    - name: Cache Gradle dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-          !~/.gradle/caches/build-cache-*
-        key: gradle-8.4-${{ runner.os }}
-        restore-keys: |
-          gradle-8.4-
-
     - name: Build APK (no tests/lint)
       run: |
         ./gradlew assembleDebug --no-daemon -x test -x lint -x lintVitalRelease
