@@ -30,13 +30,10 @@ target_include_directories(sandbox_radar PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/app/src/main/cpp"
 )
 
-# 确保能够找到jni.h
-find_package(JNI REQUIRED)
-target_include_directories(sandbox_radar PRIVATE ${JNI_INCLUDE_DIRS})
+# Android NDK已经提供了JNI头文件，不需要额外查找
 
 # 链接库
 target_link_libraries(sandbox_radar
-    ${JNI_LIBRARIES}
     log
     android
 )
