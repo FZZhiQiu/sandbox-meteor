@@ -29,6 +29,18 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
+    - name: Download Gradle Wrapper
+      run: |
+        # 确保gradle-wrapper.jar存在
+        if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+          echo "Downloading Gradle Wrapper JAR..."
+          mkdir -p gradle/wrapper
+          wget -q https://services.gradle.org/distributions/gradle-8.4-bin.zip -O gradle/wrapper/gradle-8.4-bin.zip
+          unzip -q gradle/wrapper/gradle-8.4-bin.zip -d gradle/wrapper/temp
+          cp gradle/wrapper/temp/gradle-8.4/lib/plugins/gradle-wrapper-main-8.4.jar gradle/wrapper/gradle-wrapper.jar
+          rm -rf gradle/wrapper/temp
+        fi
+
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
       with:
