@@ -1,5 +1,6 @@
+# Simplified CMakeLists.txt for Android build
 cmake_minimum_required(VERSION 3.22.1)
-project(sandbox_meteor)
+project(sandbox_radar)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -11,9 +12,9 @@ option(ENABLE_60FPS "Enable 60 FPS interpolation" ON)
 add_library(
     sandbox_radar
     SHARED
-    jni_interface.cc
-    radiation.cc
-    volcano.cc
+    app/src/main/cpp/jni_interface.cc
+    app/src/main/cpp/radiation.cc
+    app/src/main/cpp/volcano.cc
     src/core/render_loop.cc
     src/core/sim_loop.cc
     src/interpolate/agent_lerp.cc
@@ -22,15 +23,12 @@ add_library(
 )
 
 # 包含头文件路径
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
+target_include_directories(
+    sandbox_radar PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/app/src/main/cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../sandbox-radar
-    ${CMAKE_CURRENT_SOURCE_DIR}/../sandbox-radar/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/../sandbox-radar/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/../sandbox-radar/src/core
-    ${CMAKE_CURRENT_SOURCE_DIR}/../sandbox-radar/src/interpolate
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/interpolate
 )
 
 # 链接 Android NDK 提供的库
@@ -38,14 +36,4 @@ target_link_libraries(
     sandbox_radar
     log        # Android log
     android    # Android system API
-)
-
-# 主可执行文件（如果需要）
-add_executable(sandbox_meteor
-    main_60fps.cc
-)
-
-# 链接库到主可执行文件
-target_link_libraries(sandbox_meteor
-    sandbox_radar
 )

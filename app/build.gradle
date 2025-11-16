@@ -17,7 +17,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                targets "sandbox_meteor"
+                targets "sandbox_radar"
                 arguments "-DANDROID_STL=c++_static",
                           "-DENABLE_60FPS=ON",
                           "-DCMAKE_BUILD_TYPE=Release"
@@ -54,7 +54,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path file('../CMakeLists.txt')
+            path file('../CMakeLists_simplified.txt')
             version rootProject.cmakeVersion
         }
     }

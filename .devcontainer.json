@@ -1,0 +1,32 @@
+# GitHub Codespaces 配置
+# 用于在GitHub Codespaces中自动设置开发环境
+
+# 开发容器配置
+{
+  "name": "Android",
+  "image": "thyrlian/android-sdk:latest",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "installGradle": true
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "redhat.java",
+        "ms-vscode.vscode-typescript-next"
+      ]
+    }
+  },
+  "forwardPorts": [8081],
+  "portsAttributes": {
+    "8081": {
+      "label": "React Native Packager",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "chmod +x ./gradlew && yes | sdkmanager --licenses || true",
+  "remoteUser": "root"
+}
