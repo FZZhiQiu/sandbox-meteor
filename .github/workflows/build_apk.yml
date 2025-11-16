@@ -30,6 +30,7 @@ jobs:
     - name: Accept Android Licenses
       run: |
         yes | sdkmanager --licenses || true
+        yes | sdkmanager --update || true
 
     - name: Make gradlew executable
       run: chmod +x ./gradlew
