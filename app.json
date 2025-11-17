@@ -1,0 +1,9 @@
+{
+  "expo": {
+    "name": "happy",
+    "slug": "happy",
+    "version": "1.0.0",
+    "plugins": ["@config-plugins/react-native-webrtc"]
+  }
+}
+

@@ -13,7 +13,7 @@ if [ -z "$BITRISE_ACCESS_TOKEN" ]; then
 fi
 
 # 配置变量
-APP_SLUG=""  # 您的Bitrise应用slug
+APP_SLUG="sandbox-meteor"  # 您的Bitrise应用slug
 BUILD_TRIGGER_URL="https://api.bitrise.io/v0.1/apps/$APP_SLUG/builds"
 ZIP_FILE="android-project.zip"
 APK_DIR="apk"

@@ -1,0 +1,55 @@
+name: Build and Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+
+    - name: Make gradlew executable
+      run: chmod +x android-apk/gradlew
+
+    - name: Create Keystore Directory
+      run: mkdir -p android-apk/keystore
+
+    - name: Decode Keystore
+      run: |
+        echo "${{ secrets.KEYSTORE }}" | base64 -d > android-apk/keystore/release.jks
+
+    - name: Build Release APK
+      run: |
+        cd android-apk
+        ./gradlew assembleRelease
+      env:
+        RELEASE_STORE_FILE: android-apk/keystore/release.jks
+        RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+        RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+        RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: Release APK
+        path: android-apk/app/build/outputs/apk/release/app-release.apk
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: android-apk/app/build/outputs/apk/release/app-release.apk
+        generate_release_notes: true

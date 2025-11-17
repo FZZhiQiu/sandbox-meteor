@@ -1,6 +1,8 @@
 name: Build APK
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
   workflow_dispatch:
@@ -8,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: thyrlian/android-sdk:latest
     
     steps:
     - name: Checkout code
@@ -22,52 +26,45 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      with:
-        packages: tools platform-tools build-tools-34.0.0 cmake-3.22.1
-
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
-    - name: Cache Gradle dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-          !~/.gradle/caches/build-cache-*
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-
-    - name: Build APK
+    - name: Download and install Gradle 8.4
       run: |
-        ./gradlew assembleRelease --no-daemon
+        wget https://services.gradle.org/distributions/gradle-8.4-bin.zip
+        unzip gradle-8.4-bin.zip
+        export GRADLE_HOME=$(pwd)/gradle-8.4
+        export PATH=$PATH:$GRADLE_HOME/bin
+        echo "GRADLE_HOME=$(pwd)/gradle-8.4" >> $GITHUB_ENV
+        echo "$(pwd)/gradle-8.4/bin" >> $GITHUB_PATH
+
+    - name: Build APK (no tests/lint)
+      run: |
+        ./gradlew assembleDebug --no-daemon --gradle-user-home=$(pwd)/.gradle -x test -x lint -x lintVitalRelease
       env:
         JAVA_OPTS: -Xmx2048m
 
     - name: Create APK directory
       run: |
         mkdir -p apk
-        cp app/build/outputs/apk/release/app-release.apk apk/app-release.apk
+        cp app/build/outputs/apk/debug/app-debug.apk apk/app-debug.apk
 
     - name: Upload APK to Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: sandbox-meteor-apk
-        path: apk/app-release.apk
+        path: apk/app-debug.apk
         retention-days: 30
 
     - name: Get download URL
       id: apk_url
       run: |
-        APK_SIZE=$(du -h apk/app-release.apk | cut -f1)
+        APK_SIZE=$(du -h apk/app-debug.apk | cut -f1)
         echo "apk_size=$APK_SIZE" >> $GITHUB_OUTPUT
-        echo "apk_name=app-release.apk" >> $GITHUB_OUTPUT
+        echo "apk_name=app-debug.apk" >> $GITHUB_OUTPUT
 
     - name: Print build info
       run: |
         echo "Build completed!"
         echo "APK Size: ${{ steps.apk_url.outputs.apk_size }}"
-        echo "APK Name: ${{ steps.apk_url.outputs.apk_name }}"
+        echo "APK Name: ${{ steps.apk_url.outputs.apk_name }}

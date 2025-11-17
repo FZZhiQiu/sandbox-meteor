@@ -1,1 +1,0 @@
-/data/data/com.termux/files/usr/bin/c++ -O3 -ffast-math -DNDEBUG -Xlinker --dependency-file=CMakeFiles/sandbox_meteor.dir/link.d CMakeFiles/sandbox_meteor.dir/main_60fps.cc.o -o sandbox_meteor  -Wl,-rpath,/data/data/com.termux/files/home/happy/android-apk/build libsandbox_radar.so

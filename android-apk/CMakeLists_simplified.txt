@@ -1,0 +1,39 @@
+# Simplified CMakeLists.txt for Android build
+cmake_minimum_required(VERSION 3.22.1)
+project(sandbox_radar)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ffast-math -DNDEBUG")
+
+option(ENABLE_60FPS "Enable 60 FPS interpolation" ON)
+
+# 添加源码
+add_library(
+    sandbox_radar
+    SHARED
+    app/src/main/cpp/jni_interface.cc
+    app/src/main/cpp/radiation.cc
+    app/src/main/cpp/volcano.cc
+    src/core/render_loop.cc
+    src/core/sim_loop.cc
+    src/interpolate/agent_lerp.cc
+    src/interpolate/audio_lerp.cc
+    src/interpolate/field_lerp.cc
+)
+
+# 包含头文件路径
+target_include_directories(
+    sandbox_radar PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/app/src/main/cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/interpolate
+)
+
+# 链接 Android NDK 提供的库
+target_link_libraries(
+    sandbox_radar
+    log        # Android log
+    android    # Android system API
+)

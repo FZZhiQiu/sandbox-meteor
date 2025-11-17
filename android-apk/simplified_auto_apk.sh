@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Simplified Auto APK Build Script
-# Bypasses GitHub CLI requirements for Termux environment
+# Simplified APK Build Script for Termux
+# Focuses on essential build steps without complex workflow monitoring
 
 set -e
 
@@ -14,81 +14,164 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Progress bar function
-show_progress() {
-    local duration=$1
-    local steps=$2
-    local step=$3
-    local info=$4
+echo -e "${PURPLE}🚀 Simplified APK Build Script${NC}"
+echo -e "${PURPLE}==============================${NC}\n"
+
+# Check if in the correct directory
+if [ ! -f "settings.gradle" ] || [ ! -f "build.gradle" ] || [ ! -d "app" ]; then
+    echo -e "${RED}❌ Error: Not in the correct Android project directory${NC}"
+    exit 1
+fi
+
+# Function to check if required tools are available
+check_tools() {
+    echo -e "${YELLOW}🔍 Checking required tools...${NC}"
     
-    local percentage=$((step * 100 / steps))
-    local completed=$((percentage * 40 / 100))
-    local remaining=$((40 - completed))
+    if ! command -v java &> /dev/null; then
+        echo -e "${RED}❌ Error: Java is not installed or not in PATH${NC}"
+        exit 1
+    fi
     
-    local bar=""
-    for ((i=0; i<completed; i++)); do bar+="█"; done
-    for ((i=0; i<remaining; i++)); do bar+="░"; done
+    if ! command -v git &> /dev/null; then
+        echo -e "${RED}❌ Error: Git is not installed or not in PATH${NC}"
+        exit 1
+    fi
     
-    printf "\r${CYAN}[${bar}] ${percentage}%%${NC} - ${info}\033[K"
+    echo -e "${GREEN}✅ Required tools found${NC}"
 }
 
-echo -e "${PURPLE}🚀 Auto APK Build Script${NC}"
-echo -e "${PURPLE}=========================${NC}\n"
-
-# Get version from command line argument or default
-VERSION="${1:-3.2.2}"
-TAG="v$VERSION"
-
-echo -e "${BLUE}📦 Building version: $VERSION${NC}"
-
-# Simulate git operations
-echo -e "${YELLOW}📝 Simulating git add, commit, and tag...${NC}"
-sleep 1
-echo -e "${GREEN}✅ Tagged version: $TAG${NC}"
-
-# Simulate push
-echo -e "${YELLOW}📡 Simulating push to GitHub...${NC}"
-sleep 1
-echo -e "${GREEN}✅ Push successful${NC}"
-
-# Simulate workflow start
-echo -e "${YELLOW}⏳ Simulating GitHub Actions workflow start...${NC}"
-for i in {1..10}; do
-    show_progress 20 10 $i "Starting workflow..."
-    sleep 0.2
-done
-echo -e "\n${GREEN}✅ Workflow started${NC}"
-
-# Simulate workflow progress
-echo -e "${YELLOW}🔄 Simulating workflow progress...${NC}"
-STEP=1
-TOTAL_STEPS=10
-for i in {1..20}; do
-    show_progress 20 $TOTAL_STEPS $STEP "Building APK..."
-    sleep 0.2
-    STEP=$((STEP + 1))
-    if [ $STEP -gt $TOTAL_STEPS ]; then
-        STEP=1
+# Function to prepare for build
+prepare_build() {
+    echo -e "${YELLOW}🔧 Preparing build environment...${NC}"
+    
+    # Check if Android environment variables are set
+    if [ -z "$ANDROID_HOME" ]; then
+        echo -e "${YELLOW}⚠️  ANDROID_HOME not set, attempting to auto-detect...${NC}"
+        
+        # Try to find Android SDK in common locations
+        if [ -d "$HOME/android-sdk" ]; then
+            export ANDROID_HOME="$HOME/android-sdk"
+        elif [ -d "$HOME/Android/Sdk" ]; then
+            export ANDROID_HOME="$HOME/Android/Sdk"
+        elif [ -d "/data/data/com.termux/files/home/android-sdk" ]; then
+            export ANDROID_HOME="/data/data/com.termux/files/home/android-sdk"
+        fi
+        
+        if [ -n "$ANDROID_HOME" ]; then
+            export ANDROID_SDK_ROOT="$ANDROID_HOME"
+            export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/bin"
+        fi
     fi
-done
+    
+    echo -e "${GREEN}✅ Build environment prepared${NC}"
+}
 
-echo -e "\n${GREEN}✅ Build completed successfully${NC}"
+# Function to check and update Gradle wrapper if needed
+check_gradle_wrapper() {
+    echo -e "${YELLOW}📦 Checking Gradle wrapper...${NC}"
+    
+    # Ensure the gradle-wrapper.jar exists and is valid
+    GRADLE_WRAPPER_JAR="gradle/wrapper/gradle-wrapper.jar"
+    if [ ! -f "$GRADLE_WRAPPER_JAR" ]; then
+        echo -e "${RED}❌ Error: Gradle wrapper JAR file not found: $GRADLE_WRAPPER_JAR${NC}"
+        exit 1
+    fi
+    
+    # Check if it's a valid JAR file
+    if ! unzip -t "$GRADLE_WRAPPER_JAR" >/dev/null 2>&1; then
+        echo -e "${RED}❌ Error: Gradle wrapper JAR file is corrupted: $GRADLE_WRAPPER_JAR${NC}"
+        exit 1
+    fi
+    
+    echo -e "${GREEN}✅ Gradle wrapper is valid${NC}"
+}
 
-# Simulate APK download
-echo -e "${YELLOW}📥 Simulating APK download...${NC}"
-mkdir -p apk
+# Function to run a basic build check
+run_build_check() {
+    echo -e "${YELLOW}🔍 Running build configuration check...${NC}"
+    
+    # Try a simple configuration check with minimal options
+    ./gradlew --dry-run --console=plain --quiet || {
+        echo -e "${YELLOW}⚠️  Build configuration has issues, but continuing...${NC}"
+    }
+    
+    echo -e "${GREEN}✅ Build configuration check completed${NC}"
+}
 
-# Create a simulated APK file with correct size
-dd if=/dev/zero of=apk/app-release.apk bs=1M count=181 2>/dev/null
-NEW_APK_NAME="sandbox-meteor-$VERSION.apk"
-mv apk/app-release.apk "apk/$NEW_APK_NAME"
+# Function to clean build outputs
+clean_build() {
+    echo -e "${YELLOW}🧹 Cleaning previous build outputs...${NC}"
+    
+    # Kill any existing Gradle daemons to avoid conflicts
+    pkill -f "GradleDaemon" 2>/dev/null || true
+    
+    # Remove build outputs
+    rm -rf app/build/ 2>/dev/null || true
+    rm -rf build/ 2>/dev/null || true
+    
+    echo -e "${GREEN}✅ Build outputs cleaned${NC}"
+}
 
-APK_SIZE=$(du -h "apk/$NEW_APK_NAME" | cut -f1)
-echo -e "\n${GREEN}✅ APK downloaded successfully!${NC}"
-echo -e "${GREEN}📁 APK Path: apk/$NEW_APK_NAME${NC}"
-echo -e "${GREEN}📊 File Size: $APK_SIZE${NC}"
+# Function to build APK
+build_apk() {
+    echo -e "${YELLOW}🏗️  Building APK...${NC}"
+    echo -e "${CYAN}This may take a few minutes...${NC}"
+    
+    # Build with minimal options to reduce resource usage
+    ./gradlew assembleDebug \
+        --no-daemon \
+        -x test \
+        -x lint \
+        --console=plain \
+        --max-workers=1 \
+        -Dorg.gradle.jvmargs="-Xmx2g -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError" || {
+            echo -e "${RED}❌ Error: Build failed${NC}"
+            echo -e "${RED}💡 Try checking the build log for specific errors${NC}"
+            return 1
+        }
+    
+    echo -e "${GREEN}✅ APK build completed${NC}"
+}
 
-echo -e "\n${CYAN}🎉 APK 已就绪!${NC}"
-echo -e "${CYAN}🔊 APK 已就绪${NC}"
+# Function to verify APK output
+verify_apk() {
+    echo -e "${YELLOW}🔍 Verifying APK output...${NC}"
+    
+    APK_PATH="app/build/outputs/apk/debug/app-debug.apk"
+    if [ -f "$APK_PATH" ]; then
+        APK_SIZE=$(du -h "$APK_PATH" | cut -f1)
+        echo -e "${GREEN}✅ APK found: $APK_PATH${NC}"
+        echo -e "${GREEN}📊 APK Size: $APK_SIZE${NC}"
+        
+        # Copy to apk directory for consistency
+        mkdir -p apk
+        cp "$APK_PATH" "apk/sandbox-meteor-debug.apk"
+        echo -e "${GREEN}📁 Copied to: apk/sandbox-meteor-debug.apk${NC}"
+    else
+        echo -e "${RED}❌ Error: APK was not created at $APK_PATH${NC}"
+        return 1
+    fi
+}
 
-echo -e "\n${PURPLE}✨ Build process completed!${NC}"
+# Main execution
+main() {
+    check_tools
+    prepare_build
+    check_gradle_wrapper
+    clean_build
+    run_build_check
+    
+    if build_apk; then
+        verify_apk
+        echo -e "\n${GREEN}🎉 Build completed successfully!${NC}"
+        echo -e "${GREEN}📁 APK location: apk/sandbox-meteor-debug.apk${NC}"
+        return 0
+    else
+        echo -e "\n${RED}❌ Build failed!${NC}"
+        echo -e "${RED}💡 Check the build logs for more details${NC}"
+        return 1
+    fi
+}
+
+# Run main function
+main "$@"
