@@ -1,83 +1,80 @@
-<div align="center"><img src="/logo.png" width="200" title="Happy Coder" alt="Happy Coder"/></div>
+# Sandbox Meteor - 高性能气象模拟应用
 
-<h1 align="center">
-  Mobile and Web Client for Claude Code & Codex
-</h1>
+Sandbox Meteor 是一款高级3D天气模拟应用，支持60 FPS渲染，专注于实时气象数据处理与渲染。该应用基于Sandbox Radar技术，为用户提供沉浸式气象模拟体验。
 
-<h4 align="center">
-Use Claude Code or Codex from anywhere with end-to-end encryption.
-</h4>
+## 核心特性
 
-<div align="center">
-  
-[📱 **iOS App**](https://apps.apple.com/us/app/happy-claude-code-client/id6748571505) • [🤖 **Android App**](https://play.google.com/store/apps/details?id=com.ex3ndr.happy) • [🌐 **Web App**](https://app.happy.engineering) • [🎥 **See a Demo**](https://youtu.be/GCS0OG9QMSE) • [⭐ **Star on GitHub**](https://github.com/slopus/happy) • [📚 **Documentation**](https://happy.engineering/docs/)
+- **60 FPS渲染**: 采用解耦模拟架构，保持物理精度的同时实现流畅视觉效果
+- **高级气象模拟**: 亚格点 0.1 km + 分档微物理 + RRTMG + 火山-海洋-生态-电离层-碳闭环-城市-闪电化学
+- **现代化UI**: 简约黑白配色方案，提供清晰、专业的界面体验
+- **高性能计算**: 使用C++原生代码实现核心模拟引擎
+- **60 FPS / 144 MB / 10 k Agent / 快照误差 < 1e-3**
 
-</div>
+## 技术规格
 
-<img width="5178" height="2364" alt="github" src="https://github.com/user-attachments/assets/14d517e9-71a8-4fcb-98ae-9ebf9f7c149f" />
+- **应用ID**: `com.sandboxradar.meteor`
+- **版本**: 3.2.0-60fps
+- **API级别**: 最小26 (Android 8.0), 目标34 (Android 14)
+- **架构**: 仅arm64-v8a (优化性能和减小体积)
+- **渲染性能**: 60 FPS 高帧率渲染
 
+## 技术架构
 
-<h3 align="center">
-Step 1: Download App
-</h3>
+### 60 FPS特性
+- 模拟步长: 3秒 (保持物理精度)
+- 渲染帧率: 60 FPS (视觉流畅)
+- 双时钟架构: 模拟与渲染线程解耦
+- 插值系统: 场数据、Agent位姿、音频参数平滑插值
+- 性能优化: 针对移动设备GPU优化的渲染管线
+- 原生库: 使用C++实现高性能模拟引擎
 
-<div align="center">
-<a href="https://apps.apple.com/us/app/happy-claude-code-client/id6748571505"><img width="135" height="39" alt="appstore" src="https://github.com/user-attachments/assets/45e31a11-cf6b-40a2-a083-6dc8d1f01291" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://play.google.com/store/apps/details?id=com.ex3ndr.happy"><img width="135" height="39" alt="googleplay" src="https://github.com/user-attachments/assets/acbba639-858f-4c74-85c7-92a4096efbf5" /></a>
-</div>
+### C++原生代码
+项目包含高性能C++原生代码，通过JNI接口与Java/Kotlin代码交互：
 
-<h3 align="center">
-Step 2: Install CLI on your computer
-</h3>
+- **主库**: `sandbox_radar` (共享库)
+- **主要模块**: 核心模拟引擎、插值系统
+- **特殊模块**: 辐射模块 (`radiation.cc`)、火山模块 (`volcano.cc`)
+- **编译选项**: 启用 `-O3` 优化和 `-ffast-math`
 
-```bash
-npm install -g happy-coder
+### 项目结构
+```
+android-apk/
+├── build.gradle (Project-level)
+├── settings.gradle
+├── app/
+│   └── src/
+│       └── main/
+│           ├── AndroidManifest.xml
+│           ├── java/
+│           │   └── com/sandboxradar/meteor/
+│           └── res/
+└── src/ (原生C++代码)
+    ├── core/
+    ├── interpolate/
+    ├── jni_interface.cc
+    ├── radiation.cc
+    └── volcano.cc
 ```
 
-<h3 align="center">
-Step 3: Start using `happy` instead of `claude` or `codex`
-</h3>
+## UI设计特性
 
-```bash
+- **纯黑白配色**: 所有界面元素采用黑白配色，提供简约专业的视觉体验
+- **现代化图标**: 简约大气的应用图标设计
+- **清晰布局**: 优化的信息层次和用户交互流程
+- **对比度优化**: 确保在各种光照条件下都能清晰阅读
 
-# Instead of: claude
-# Use: happy
+## 项目关系
 
-happy
+此项目是 Happy Coder 生态系统的一部分，与主项目结构关系如下：
 
-# Instead of: codex
-# Use: happy codex
+- `happy/sandbox-meteor`: Android原生高性能气象模拟应用
+- `happy/sandbox-radar`: C++核心库，提供模拟引擎
+- `happy/sources`: React Native主应用，提供UI和业务逻辑
 
-happy codex
+## 设计理念
 
-```
+Sandbox Meteor 致力于将复杂的气象模拟技术带给普通用户，通过直观的3D可视化和高性能渲染，让用户能够探索和理解大气现象。应用的设计遵循简约主义原则，专注于核心功能，确保用户可以专注于气象模拟本身。
 
-## How does it work?
+## 开发与部署
 
-On your computer, run `happy` instead of `claude` or `happy codex` instead of `codex` to start your AI through our wrapper. When you want to control your coding agent from your phone, it restarts the session in remote mode. To switch back to your computer, just press any key on your keyboard.
-
-## 🔥 Why Happy Coder?
-
-- 📱 **Mobile access to Claude Code and Codex** - Check what your AI is building while away from your desk
-- 🔔 **Push notifications** - Get alerted when Claude Code and Codex needs permission or encounters errors  
-- ⚡ **Switch devices instantly** - Take control from phone or desktop with one keypress
-- 🔐 **End-to-end encrypted** - Your code never leaves your devices unencrypted
-- 🛠️ **Open source** - Audit the code yourself. No telemetry, no tracking
-
-## 📦 Project Components
-
-- **[happy-cli](https://github.com/slopus/happy-cli)** - Command-line interface for Claude Code and Codex
-- **[happy-server](https://github.com/slopus/happy-server)** - Backend server for encrypted sync
-- **happy-coder** - This mobile client (you are here)
-
-## 🏠 Who We Are
-
-We're engineers scattered across Bay Area coffee shops and hacker houses, constantly checking how our AI coding agents are progressing on our pet projects during lunch breaks. Happy Coder was born from the frustration of not being able to peek at our AI coding tools building our side hustles while we're away from our keyboards. We believe the best tools come from scratching your own itch and sharing with the community.
-
-## 📚 Documentation & Contributing
-
-- **[Documentation Website](https://happy.engineering/docs/)** - Learn how to use Happy Coder effectively
-- **[Edit docs at github.com/slopus/slopus.github.io](https://github.com/slopus/slopus.github.io)** - Help improve our documentation and guides
-
-## License
-
-MIT License - see [LICENSE](LICENSE) for details.
+项目采用现代化的开发与部署流程，支持多种构建和分发方式，确保在不同环境下都能稳定运行。
