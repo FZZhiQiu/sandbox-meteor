@@ -44,7 +44,8 @@ Happy Coder 是一个移动和 Web 客户端，用于访问 Claude Code 和 Code
 - `sources/-session`: 会话相关功能
 - `sources/-zen`: 任务管理功能
 - `src-tauri`: Tauri 桌面应用配置
-- `sandbox-radar`: C++ 项目部分
+- `sandbox-radar`: C++ 核心库，提供模拟引擎
+- `sandbox-meteor`: Android原生高性能气象模拟应用，支持60 FPS渲染
 
 ## 构建和运行
 

@@ -32,7 +32,7 @@
 - **描述**: 在桌面版Android Studio中打开项目进行构建
 - **配置文件**: `ANDROID_STUDIO_IMPORT.md`
 - **使用方法**: 
-  1. 在Android Studio中打开项目
+  1. 在Android Studio中打开项目 (`/data/data/com.termux/files/home/happy/android-apk`)
   2. 等待项目同步
   3. Build > Build Bundle(s) / APK(s) > Build APK
 - **优势**: 图形界面，调试方便
