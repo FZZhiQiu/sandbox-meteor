@@ -1,0 +1,393 @@
+[
+  {
+    "id": 0,
+    "name": "无业",
+    "icon": "none",
+    "skill": {},
+    "disaster": {}
+  },
+  {
+    "id": 1,
+    "name": "气象观测员",
+    "icon": "️",
+    "skill": {"observe": 1},
+    "disaster": {"early_warn": 0.1}
+  },
+  {
+    "id": 2,
+    "name": "雷达工程师",
+    "icon": "",
+    "skill": {"radar": 1},
+    "disaster": {"echo_track": 0.2}
+  },
+  {
+    "id": 3,
+    "name": "闪电定位员",
+    "icon": "⚡️",
+    "skill": {"lightning": 1}
+  },
+  {
+    "id": 4,
+    "name": "风暴追踪员",
+    "icon": "️",
+    "skill": {"storm": 1},
+    "disaster": {"path_pred": 0.3}
+  },
+  {
+    "id": 5,
+    "name": "数值预报员",
+    "icon": "",
+    "skill": {"nwp": 1},
+    "disaster": {"intensity_pred": 0.2}
+  },
+  {
+    "id": 6,
+    "name": "人影作业员",
+    "icon": "✈️",
+    "skill": {"cloud_seed": 1}
+  },
+  {
+    "id": 7,
+    "name": "防雷工程师",
+    "icon": "️",
+    "skill": {"lightning_prot": 1}
+  },
+  {
+    "id": 8,
+    "name": "台风分析师",
+    "icon": "",
+    "skill": {"typhoon": 1}
+  },
+  {
+    "id": 9,
+    "name": "冰雹观察员",
+    "icon": "",
+    "skill": {"hail": 1}
+  },
+  {
+    "id": 10,
+    "name": "卫星气象员",
+    "icon": "",
+    "skill": {"satellite": 1}
+  },
+  {
+    "id": 11,
+    "name": "大气探测员",
+    "icon": "",
+    "skill": {"sounding": 1}
+  },
+  {
+    "id": 12,
+    "name": "气候分析师",
+    "icon": "",
+    "skill": {"climate": 1}
+  },
+  {
+    "id": 13,
+    "name": "海洋气象员",
+    "icon": "",
+    "skill": {"ocean": 1}
+  },
+  {
+    "id": 14,
+    "name": "航空气象员",
+    "icon": "",
+    "skill": {"aviation": 1}
+  },
+  {
+    "id": 15,
+    "name": "农业气象员",
+    "icon": "",
+    "skill": {"agriculture": 1}
+  },
+  {
+    "id": 16,
+    "name": "环境气象员",
+    "icon": "",
+    "skill": {"environment": 1}
+  },
+  {
+    "id": 17,
+    "name": "水文气象员",
+    "icon": "",
+    "skill": {"hydrology": 1}
+  },
+  {
+    "id": 18,
+    "name": "雷电防护师",
+    "icon": "️",
+    "skill": {"lightning_prot": 1}
+  },
+  {
+    "id": 19,
+    "name": "云物理研究员",
+    "icon": "",
+    "skill": {"cloud_physics": 1}
+  },
+  {
+    "id": 20,
+    "name": "大气化学师",
+    "icon": "",
+    "skill": {"atmos_chem": 1}
+  },
+  {
+    "id": 21,
+    "name": "边界层气象员",
+    "icon": "",
+    "skill": {"boundary_layer": 1}
+  },
+  {
+    "id": 22,
+    "name": "中尺度气象员",
+    "icon": "",
+    "skill": {"mesoscale": 1}
+  },
+  {
+    "id": 23,
+    "name": "强对流预报员",
+    "icon": "",
+    "skill": {"convection": 1}
+  },
+  {
+    "id": 24,
+    "name": "积冰预报员",
+    "icon": "",
+    "skill": {"icing": 1}
+  },
+  {
+    "id": 25,
+    "name": "沙尘观测员",
+    "icon": "",
+    "skill": {"dust": 1}
+  },
+  {
+    "id": 26,
+    "name": "雾观测员",
+    "icon": "",
+    "skill": {"fog": 1}
+  },
+  {
+    "id": 27,
+    "name": "能见度观测员",
+    "icon": "",
+    "skill": {"visibility": 1}
+  },
+  {
+    "id": 28,
+    "name": "风廓线雷达员",
+    "icon": "",
+    "skill": {"wind_profile": 1}
+  },
+  {
+    "id": 29,
+    "name": "微波辐射计员",
+    "icon": "",
+    "skill": {"radiometer": 1}
+  },
+  {
+    "id": 30,
+    "name": "激光雷达观测员",
+    "icon": "",
+    "skill": {"lidar": 1}
+  },
+  {
+    "id": 31,
+    "name": "气象雷达维护",
+    "icon": "",
+    "skill": {"radar_maint": 1}
+  },
+  {
+    "id": 32,
+    "name": "高级气象学家",
+    "icon": "",
+    "skill": {"all_met": 1},
+    "require": {"sum_skill": 500}
+  },
+  {
+    "id": 33,
+    "name": "结构工程师",
+    "icon": "️",
+    "skill": {"structure": 1}
+  },
+  {
+    "id": 34,
+    "name": "电气工程师",
+    "icon": "",
+    "skill": {"electric": 1}
+  },
+  {
+    "id": 35,
+    "name": "土木工程师",
+    "icon": "",
+    "skill": {"civil": 1}
+  },
+  {
+    "id": 36,
+    "name": "机械工程师",
+    "icon": "",
+    "skill": {"mechanical": 1}
+  },
+  {
+    "id": 37,
+    "name": "材料工程师",
+    "icon": "",
+    "skill": {"material": 1}
+  },
+  {
+    "id": 38,
+    "name": "电子工程师",
+    "icon": "",
+    "skill": {"electronics": 1}
+  },
+  {
+    "id": 39,
+    "name": "通信工程师",
+    "icon": "",
+    "skill": {"comm": 1}
+  },
+  {
+    "id": 40,
+    "name": "软件工程师",
+    "icon": "",
+    "skill": {"software": 1}
+  },
+  {
+    "id": 41,
+    "name": "安全工程师",
+    "icon": "",
+    "skill": {"safety": 1}
+  },
+  {
+    "id": 42,
+    "name": "环境工程师",
+    "icon": "",
+    "skill": {"env_eng": 1}
+  },
+  {
+    "id": 43,
+    "name": "给排水工程师",
+    "icon": "",
+    "skill": {"water_eng": 1}
+  },
+  {
+    "id": 44,
+    "name": "暖通工程师",
+    "icon": "",
+    "skill": {"hvac": 1}
+  },
+  {
+    "id": 45,
+    "name": "地质工程师",
+    "icon": "",
+    "skill": {"geology": 1}
+  },
+  {
+    "id": 46,
+    "name": "岩土工程师",
+    "icon": "",
+    "skill": {"geotech": 1}
+  },
+  {
+    "id": 47,
+    "name": "道路工程师",
+    "icon": "",
+    "skill": {"road": 1}
+  },
+  {
+    "id": 48,
+    "name": "桥梁工程师",
+    "icon": "",
+    "skill": {"bridge": 1}
+  },
+  {
+    "id": 49,
+    "name": "水利工程师",
+    "icon": "",
+    "skill": {"water_resource": 1}
+  },
+  {
+    "id": 50,
+    "name": "港口工程师",
+    "icon": "",
+    "skill": {"port": 1}
+  },
+  {
+    "id": 51,
+    "name": "隧道工程师",
+    "icon": "",
+    "skill": {"tunnel": 1}
+  },
+  {
+    "id": 52,
+    "name": "铁路工程师",
+    "icon": "",
+    "skill": {"railway": 1}
+  },
+  {
+    "id": 53,
+    "name": "航空工程师",
+    "icon": "",
+    "skill": {"aerospace": 1}
+  },
+  {
+    "id": 54,
+    "name": "设备维护师",
+    "icon": "",
+    "skill": {"maintenance": 1}
+  },
+  {
+    "id": 55,
+    "name": "质量工程师",
+    "icon": "",
+    "skill": {"quality": 1}
+  },
+  {
+    "id": 56,
+    "name": "项目工程师",
+    "icon": "",
+    "skill": {"project": 1}
+  },
+  {
+    "id": 57,
+    "name": "安全监督员",
+    "icon": "",
+    "skill": {"safety_sup": 1}
+  },
+  {
+    "id": 58,
+    "name": "工程监理",
+    "icon": "",
+    "skill": {"supervisor": 1}
+  },
+  {
+    "id": 59,
+    "name": "建造师",
+    "icon": "",
+    "skill": {"constructor": 1}
+  },
+  {
+    "id": 60,
+    "name": "高级工程师",
+    "icon": "",
+    "skill": {"all_eng": 1},
+    "require": {"sum_skill": 400}
+  },
+  {
+    "id": 61,
+    "name": "社区协调员",
+    "icon": "",
+    "skill": {"social_coord": 1}
+  },
+  {
+    "id": 62,
+    "name": "应急救援员",
+    "icon": "",
+    "skill": {"rescue": 1}
+  },
+  {
+    "id": 63,
+    "name": "灾害管理员",
+    "icon": "",
+    "skill": {"disaster_mgt": 1}
+  }
+]
