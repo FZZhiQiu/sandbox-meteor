@@ -91,6 +91,12 @@
             height: 150px;
             margin: 20px auto;
         }
+        /* 添加加载指示器样式 */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -124,7 +130,10 @@
                 
                 <div class="minimap-container">
                     <div class="canvas-wrapper">
-                        <canvas ref="minimapCanvas" width="256" height="256"></canvas>
+                        <canvas ref="minimapCanvas" id="minimap" width="512" height="512"></canvas>
+                        <div v-if="!webglInitialized" class="loading">
+                            初始化 WebGL...
+                        </div>
                     </div>
                 </div>
                 
@@ -152,7 +161,7 @@
 
     <script src="preview.js"></script>
     <script>
-        const { createApp, ref, onMounted } = Vue;
+        const { createApp, ref, onMounted, reactive } = Vue;
         
         createApp({
             setup() {
@@ -166,73 +175,44 @@
                 
                 const minimapCanvas = ref(null);
                 const pieChartCanvas = ref(null);
+                const webglInitialized = ref(false);
                 
-                // 模拟WASM初始化
+                // 初始化WASM和WebGL
                 const initializeWASM = async () => {
-                    // 模拟WASM加载完成
-                    console.log('WASM loaded');
-                    // 模拟生态向量数据
+                    console.log('Initializing WASM module and WebGL');
+                    
+                    // 设置webgl初始化状态
+                    if (window.initializeWebGL) {
+                        window.initializeWebGL('minimap');
+                        setTimeout(() => {
+                            webglInitialized.value = true;
+                        }, 1000); // 给WebGL一些时间初始化
+                    }
+                    
+                    // 启动定期更新循环
                     setInterval(() => {
-                        for (let i = 0; i < 64; i++) {
-                            ecoVector.value[i] = Math.sin(Date.now() / 1000 + i) * 0.5 + Math.random() * 0.1;
+                        // 从全局对象获取最新的生态向量
+                        if (window.getEcoVector) {
+                            ecoVector.value = window.getEcoVector();
                         }
-                        drawMinimap();
-                        drawPieChart();
+                        // 更新WebGL渲染
+                        if (window.updateWebGL) {
+                            window.updateWebGL(ecoVector.value);
+                        }
+                        // 更新饼图
+                        if (pieChartCanvas.value) {
+                            drawPieChart();
+                        }
                     }, 100);
                 };
                 
                 // 更新政策
                 const updatePolicy = () => {
                     console.log('Policy updated:', policySliders.value);
-                };
-                
-                // 绘制Minimap
-                const drawMinimap = () => {
-                    if (!minimapCanvas.value) return;
-                    
-                    const ctx = minimapCanvas.value.getContext('2d');
-                    const imageData = ctx.createImageData(256, 256);
-                    
-                    // 使用生态向量的前16个值来填充图像数据
-                    for (let y = 0; y < 256; y++) {
-                        for (let x = 0; x < 256; x++) {
-                            const idx = y * 256 + x;
-                            const vectorIdx = idx % 16; // 循环使用前16个值
-                            
-                            // 根据生态向量值确定颜色
-                            const value = ecoVector.value[vectorIdx] * 127 + 128;
-                            
-                            // 四色渲染：云水蓝、雨水绿、闪电红、水汽灰
-                            let r, g, b;
-                            if (vectorIdx < 4) {
-                                // 云水蓝
-                                r = 100;
-                                g = 150 + value / 2;
-                                b = 255;
-                            } else if (vectorIdx < 8) {
-                                // 雨水绿
-                                r = 100;
-                                g = 255;
-                                b = 150 - value / 2;
-                            } else if (vectorIdx < 12) {
-                                // 闪电红
-                                r = 255;
-                                g = 100 + value / 2;
-                                b = 100;
-                            } else {
-                                // 水汽灰
-                                r = g = b = 150 + value / 2;
-                            }
-                            
-                            const pixelIdx = idx * 4;
-                            imageData.data[pixelIdx] = Math.max(0, Math.min(255, r));
-                            imageData.data[pixelIdx + 1] = Math.max(0, Math.min(255, g));
-                            imageData.data[pixelIdx + 2] = Math.max(0, Math.min(255, b));
-                            imageData.data[pixelIdx + 3] = 255; // Alpha
-                        }
+                    // 同时更新全局政策值
+                    if (window.updatePolicyValues) {
+                        window.updatePolicyValues(policySliders.value);
                     }
-                    
-                    ctx.putImageData(imageData, 0, 0);
                 };
                 
                 // 绘制饼图
@@ -294,7 +274,7 @@
                     // 这里应该使用html2canvas，但为了简单，我们模拟
                     const link = document.createElement('a');
                     link.download = 'sandbox-meteor-screenshot.png';
-                    link.href = minimapCanvas.value.toDataURL();
+                    link.href = document.getElementById('minimap').toDataURL();
                     link.click();
                     
                     document.body.removeChild(div);
@@ -318,6 +298,24 @@
                     document.body.removeChild(link);
                 };
                 
+                // 添加全局函数，让preview.js可以更新数据
+                onMounted(() => {
+                    window.updateMinimapFromEcoVector = (newEcoVector) => {
+                        // 更新Vue响应式数据
+                        for (let i = 0; i < newEcoVector.length; i++) {
+                            ecoVector.value[i] = newEcoVector[i];
+                        }
+                        // 如果有WebGL上下文，更新它
+                        if (window.updateWebGL) {
+                            window.updateWebGL(ecoVector.value);
+                        }
+                        // 重新绘制饼图
+                        if (pieChartCanvas.value) {
+                            drawPieChart();
+                        }
+                    };
+                });
+                
                 onMounted(() => {
                     initializeWASM();
                 });
@@ -327,6 +325,7 @@
                     policySliders,
                     minimapCanvas,
                     pieChartCanvas,
+                    webglInitialized,
                     updatePolicy,
                     screenshot,
                     exportCSV

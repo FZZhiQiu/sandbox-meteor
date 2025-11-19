@@ -1,0 +1,44 @@
+// Placeholder for MiniMap Core WASM Module
+// This file will be replaced when actual WASM is built
+
+const MINIMAP_CORE_PLACEHOLDER = {
+  initialized: false,
+  
+  async init() {
+    console.log('MiniMap Core WASM Module (Placeholder Mode)');
+    this.initialized = true;
+    return this;
+  },
+  
+  // Mock function that mimics the actual WASM API
+  callMinimapUpdate(gridPtr, layerQcPtr, layerQrPtr, layerLtPtr, layerQvPtr) {
+    console.log('Minimap update called with pointers (simulated)');
+    
+    // In a real implementation, this would call the actual WASM function:
+    // Module._call_minimap_update(gridPtr, layerQcPtr, layerQrPtr, layerLtPtr, layerQvPtr);
+    
+    // For the placeholder, we'll return simulated data
+    const size = 256 * 256;
+    const qc = new Uint8Array(size);
+    const qr = new Uint8Array(size);
+    const lt = new Uint8Array(size);
+    const qv = new Uint8Array(size);
+    
+    // Simulate data generation
+    for (let i = 0; i < size; i++) {
+      qc[i] = Math.floor(Math.random() * 256);
+      qr[i] = Math.floor(Math.random() * 256);
+      lt[i] = Math.floor(Math.random() * 100); // Lower values for lightning
+      qv[i] = Math.floor(Math.random() * 256);
+    }
+    
+    return { qc, qr, lt, qv };
+  }
+};
+
+// Export for use in preview.js
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = MINIMAP_CORE_PLACEHOLDER;
+} else {
+  window.MiniMapCoreWASM = MINIMAP_CORE_PLACEHOLDER;
+}

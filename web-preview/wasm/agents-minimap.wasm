@@ -1,0 +1,53 @@
+// Placeholder for MiniMap Agents WASM Module
+// This file will be replaced when actual WASM is built
+
+const MINIMAP_AGENTS_PLACEHOLDER = {
+  initialized: false,
+  
+  async init() {
+    console.log('MiniMap Agents WASM Module (Placeholder Mode)');
+    this.initialized = true;
+    return this;
+  },
+  
+  // Mock function that mimics the actual WASM API
+  callAgentsMinimap(outMaskPtr) {
+    console.log('Agents minimap update called (simulated)');
+    
+    // In a real implementation, this would call the actual WASM function:
+    // Module._call_agents_minimap(outMaskPtr);
+    
+    // For the placeholder, we'll return simulated agent data
+    const size = 256 * 256;
+    const agentMask = new Uint8Array(size);
+    
+    // Simulate 100 agents with random positions and profession IDs
+    for (let i = 0; i < 100; i++) {
+      const x = Math.floor(Math.random() * 255);
+      const y = Math.floor(Math.random() * 255);
+      const professionId = i % 256;
+      
+      // Draw a 0.5 pixel circle (3x3 area) for each agent
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const px = x + dx;
+          const py = y + dy;
+          
+          if (px >= 0 && px < 256 && py >= 0 && py < 256) {
+            const idx = py * 256 + px;
+            agentMask[idx] = professionId;
+          }
+        }
+      }
+    }
+    
+    return agentMask;
+  }
+};
+
+// Export for use in preview.js
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = MINIMAP_AGENTS_PLACEHOLDER;
+} else {
+  window.MiniMapAgentsWASM = MINIMAP_AGENTS_PLACEHOLDER;
+}
