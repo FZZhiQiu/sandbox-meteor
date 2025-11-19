@@ -1,5 +1,5 @@
 # Sandbox Meteor v1.0  
-> 移动端 60 FPS 雷暴-生态-政策耦合沙盘
+> 移动端 60 FPS 雷暴-生态-政策耦合沙盘 - Real-time Storm-Ecosystem-Policy Sandbox
 
 ## 🚀 核心功能
 
@@ -76,9 +76,9 @@ sandbox-radar/        # C++ 核心（AI预测、GPU加速）
 
 ```
 @software{sandbox_meteor_v1,
-  author = {Your Name},
+  author = {FZZhiQiu},
   title  = {Sandbox Meteor: Real-time Storm-Ecosystem-Policy Sandbox},
-  url    = {https://github.com/yourname/sandbox-meteor},
+  url    = {https://github.com/FZZhiQiu/sandbox-meteor},
   version = {1.0.0},
   year   = {2025}
 }
