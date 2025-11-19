@@ -90,3 +90,6 @@ sandbox-radar/        # C++ 核心（AI预测、GPU加速）
 - 轻量级AI模型，适合边缘计算
 - 可解释AI预测系统
 - GPU加速计算，性能优化
+
+## 👤 作者
+- FZZhiQiu
