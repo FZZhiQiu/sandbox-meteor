@@ -1,0 +1,60 @@
+# === 跨平台构建垃圾 ===
+build/
+cmake-build-*/
+*.o
+*.so
+*.a
+*.log
+*.apk
+*.aab
+*.dex
+*.bin
+
+# === 前端 ===
+node_modules/
+.expo/
+.cache/
+dist/
+.next/
+.nuxt/
+
+# === 本地环境 ===
+.env
+local.properties
+*.iml
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# === Android ===
+android/build/
+android/app/build/
+android/.gradle/
+*.ap_
+*.apks
+
+# === iOS ===
+ios/build/
+*.ipa
+*.xcarchive
+
+# === 子模块大文件 ===
+assets/external/*.noise
+assets/external/*.atlas.png
+
+# === 编译产物 ===
+*.so
+*.dylib
+*.dll
+*.obj
+*.a
+*.lib
+*.pyc
+__pycache__/
+
+# === 临时文件 ===
+*~
+.#*
+.DS_Store
+Thumbs.db

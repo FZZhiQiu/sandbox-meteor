@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandbox Meteor - Web 预览</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        .policy-controls {
+            flex: 1;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .minimap-container {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .vector-display {
+            flex: 1;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .canvas-wrapper {
+            border: 1px solid #ddd;
+            display: inline-block;
+        }
+        canvas {
+            display: block;
+        }
+        .policy-slider {
+            margin: 10px 0;
+        }
+        .policy-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .vector-values {
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .export-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background: #007acc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        .pie-chart {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="header">
+                <h1>Sandbox Meteor - Web 预览</h1>
+                <p>实时查看气象/生态/政策状态</p>
+            </div>
+            
+            <div class="controls">
+                <div class="policy-controls">
+                    <h3>政策滑杆</h3>
+                    <div class="policy-slider">
+                        <label class="policy-label">植被政策: {{ policySliders.vegetation }}</label>
+                        <input type="range" v-model="policySliders.vegetation" min="0" max="100" @input="updatePolicy">
+                    </div>
+                    <div class="policy-slider">
+                        <label class="policy-label">减排政策: {{ policySliders.emission }}</label>
+                        <input type="range" v-model="policySliders.emission" min="0" max="100" @input="updatePolicy">
+                    </div>
+                    <div class="policy-slider">
+                        <label class="policy-label">预算政策: {{ policySliders.budget }}</label>
+                        <input type="range" v-model="policySliders.budget" min="0" max="100" @input="updatePolicy">
+                    </div>
+                    <div class="policy-slider">
+                        <label class="policy-label">建造政策: {{ policySliders.construction }}</label>
+                        <input type="range" v-model="policySliders.construction" min="0" max="100" @input="updatePolicy">
+                    </div>
+                </div>
+                
+                <div class="minimap-container">
+                    <div class="canvas-wrapper">
+                        <canvas ref="minimapCanvas" width="256" height="256"></canvas>
+                    </div>
+                </div>
+                
+                <div class="vector-display">
+                    <h3>64维生态向量</h3>
+                    <div class="vector-values">
+                        <div v-for="(value, index) in ecoVector" :key="index">
+                            [{{ index }}]: {{ value.toFixed(3) }}
+                        </div>
+                    </div>
+                    
+                    <h3>职业人口饼图</h3>
+                    <div class="pie-chart">
+                        <canvas ref="pieChartCanvas" width="150" height="150"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="export-buttons">
+                <button @click="screenshot">截图</button>
+                <button @click="exportCSV">CSV导出</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="preview.js"></script>
+    <script>
+        const { createApp, ref, onMounted } = Vue;
+        
+        createApp({
+            setup() {
+                const ecoVector = ref(new Array(64).fill(0));
+                const policySliders = ref({
+                    vegetation: 50,
+                    emission: 50,
+                    budget: 50,
+                    construction: 50
+                });
+                
+                const minimapCanvas = ref(null);
+                const pieChartCanvas = ref(null);
+                
+                // 模拟WASM初始化
+                const initializeWASM = async () => {
+                    // 模拟WASM加载完成
+                    console.log('WASM loaded');
+                    // 模拟生态向量数据
+                    setInterval(() => {
+                        for (let i = 0; i < 64; i++) {
+                            ecoVector.value[i] = Math.sin(Date.now() / 1000 + i) * 0.5 + Math.random() * 0.1;
+                        }
+                        drawMinimap();
+                        drawPieChart();
+                    }, 100);
+                };
+                
+                // 更新政策
+                const updatePolicy = () => {
+                    console.log('Policy updated:', policySliders.value);
+                };
+                
+                // 绘制Minimap
+                const drawMinimap = () => {
+                    if (!minimapCanvas.value) return;
+                    
+                    const ctx = minimapCanvas.value.getContext('2d');
+                    const imageData = ctx.createImageData(256, 256);
+                    
+                    // 使用生态向量的前16个值来填充图像数据
+                    for (let y = 0; y < 256; y++) {
+                        for (let x = 0; x < 256; x++) {
+                            const idx = y * 256 + x;
+                            const vectorIdx = idx % 16; // 循环使用前16个值
+                            
+                            // 根据生态向量值确定颜色
+                            const value = ecoVector.value[vectorIdx] * 127 + 128;
+                            
+                            // 四色渲染：云水蓝、雨水绿、闪电红、水汽灰
+                            let r, g, b;
+                            if (vectorIdx < 4) {
+                                // 云水蓝
+                                r = 100;
+                                g = 150 + value / 2;
+                                b = 255;
+                            } else if (vectorIdx < 8) {
+                                // 雨水绿
+                                r = 100;
+                                g = 255;
+                                b = 150 - value / 2;
+                            } else if (vectorIdx < 12) {
+                                // 闪电红
+                                r = 255;
+                                g = 100 + value / 2;
+                                b = 100;
+                            } else {
+                                // 水汽灰
+                                r = g = b = 150 + value / 2;
+                            }
+                            
+                            const pixelIdx = idx * 4;
+                            imageData.data[pixelIdx] = Math.max(0, Math.min(255, r));
+                            imageData.data[pixelIdx + 1] = Math.max(0, Math.min(255, g));
+                            imageData.data[pixelIdx + 2] = Math.max(0, Math.min(255, b));
+                            imageData.data[pixelIdx + 3] = 255; // Alpha
+                        }
+                    }
+                    
+                    ctx.putImageData(imageData, 0, 0);
+                };
+                
+                // 绘制饼图
+                const drawPieChart = () => {
+                    if (!pieChartCanvas.value) return;
+                    
+                    const ctx = pieChartCanvas.value.getContext('2d');
+                    ctx.clearRect(0, 0, 150, 150);
+                    
+                    // 模拟职业分布数据（使用生态向量的特定部分）
+                    const professions = ['农民', '工程师', '医生', '教师'];
+                    const values = [
+                        Math.abs(ecoVector.value[0]) * 100,
+                        Math.abs(ecoVector.value[1]) * 100,
+                        Math.abs(ecoVector.value[2]) * 100,
+                        Math.abs(ecoVector.value[3]) * 100
+                    ];
+                    
+                    // 计算总和
+                    const total = values.reduce((sum, val) => sum + val, 0);
+                    
+                    // 绘制饼图
+                    ctx.beginPath();
+                    let startAngle = 0;
+                    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'];
+                    
+                    for (let i = 0; i < professions.length; i++) {
+                        const sliceAngle = (values[i] / total) * 2 * Math.PI;
+                        
+                        ctx.fillStyle = colors[i];
+                        ctx.moveTo(75, 75);
+                        ctx.arc(75, 75, 60, startAngle, startAngle + sliceAngle);
+                        ctx.closePath();
+                        ctx.fill();
+                        
+                        startAngle += sliceAngle;
+                    }
+                };
+                
+                // 截图功能
+                const screenshot = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 1200;
+                    canvas.height = 800;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // 创建临时div来渲染整个页面
+                    const div = document.createElement('div');
+                    div.innerHTML = document.querySelector('.container').outerHTML;
+                    div.style.position = 'absolute';
+                    div.style.left = '0';
+                    div.style.top = '0';
+                    div.style.width = '1200px';
+                    div.style.height = '800px';
+                    div.style.backgroundColor = 'white';
+                    div.style.transform = 'scale(1)';
+                    document.body.appendChild(div);
+                    
+                    // 这里应该使用html2canvas，但为了简单，我们模拟
+                    const link = document.createElement('a');
+                    link.download = 'sandbox-meteor-screenshot.png';
+                    link.href = minimapCanvas.value.toDataURL();
+                    link.click();
+                    
+                    document.body.removeChild(div);
+                };
+                
+                // CSV导出功能
+                const exportCSV = () => {
+                    let csvContent = '维度,数值\n';
+                    for (let i = 0; i < ecoVector.value.length; i++) {
+                        csvContent += `${i},${ecoVector.value[i].toFixed(6)}\n`;
+                    }
+                    
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', 'eco_vector_data.csv');
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                };
+                
+                onMounted(() => {
+                    initializeWASM();
+                });
+                
+                return {
+                    ecoVector,
+                    policySliders,
+                    minimapCanvas,
+                    pieChartCanvas,
+                    updatePolicy,
+                    screenshot,
+                    exportCSV
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
