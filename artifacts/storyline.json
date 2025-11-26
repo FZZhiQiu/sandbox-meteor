@@ -1,0 +1,32 @@
+{
+  "name": "Sample Storm Development Scenario",
+  "description": "A sample storyline with moisture injection, enhanced easterly winds, and local convection triggering",
+  "events": [
+    {
+      "type": "moisture_injection",
+      "time": 0,
+      "position": {"x": 0.3, "y": 0.4, "z": 0.2},
+      "intensity": 0.8,
+      "duration": 10
+    },
+    {
+      "type": "wind_enhancement",
+      "time": 5,
+      "direction": {"x": 1.0, "y": 0.0, "z": 0.0},
+      "factor": 1.5,
+      "duration": 20
+    },
+    {
+      "type": "convection_trigger",
+      "time": 15,
+      "position": {"x": 0.5, "y": 0.5, "z": 0.3},
+      "intensity": 0.6,
+      "duration": 5
+    }
+  ],
+  "parameters": {
+    "resolution": [64, 64, 32],
+    "simulation_time": 60,
+    "output_interval": 5
+  }
+}
