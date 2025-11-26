@@ -1,0 +1,23 @@
+buildscript {
+    ext {
+        compileSdk = 34
+        minSdk = 26           // Vulkan 要求
+        targetSdk = 34
+        ndkVersion = "25.2.9519653"
+        cmakeVersion = "3.22.1"
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.2'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}

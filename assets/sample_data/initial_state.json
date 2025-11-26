@@ -1,0 +1,60 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2025-11-24T00:00:00Z",
+    "description": "气象沙盘初始状态数据"
+  },
+  "grid": {
+    "nx": 100,
+    "ny": 100,
+    "nz": 20,
+    "bounds": {
+      "west": 73.0,
+      "east": 135.0,
+      "south": 18.0,
+      "north": 54.0
+    }
+  },
+  "initial_conditions": {
+    "temperature": {
+      "surface": 288.15,
+      "lapse_rate": 6.5,
+      "description": "标准大气温度廓线"
+    },
+    "pressure": {
+      "surface": 101325.0,
+      "description": "海平面标准大气压"
+    },
+    "humidity": {
+      "surface": 0.7,
+      "profile": "exponential",
+      "description": "相对湿度随高度指数递减"
+    },
+    "wind": {
+      "u_component": {
+        "surface": 5.0,
+        "shear": 0.01,
+        "description": "东西风分量"
+      },
+      "v_component": {
+        "surface": 2.0,
+        "shear": 0.005,
+        "description": "南北风分量"
+      }
+    }
+  },
+  "perturbations": [
+    {
+      "type": "thermal",
+      "center": {"x": 50, "y": 50, "z": 0},
+      "amplitude": 5.0,
+      "radius": 10.0
+    },
+    {
+      "type": "vorticity",
+      "center": {"x": 30, "y": 70, "z": 0},
+      "strength": 0.001,
+      "radius": 15.0
+    }
+  ]
+}

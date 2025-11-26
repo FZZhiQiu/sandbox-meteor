@@ -1,0 +1,29 @@
+{
+  "name": "Sandbox Meteor Android",
+  "image": "thyrlian/android-sdk:latest",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "installGradle": true
+    },
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "redhat.java",
+        "ms-vscode.vscode-typescript-next"
+      ]
+    }
+  },
+  "forwardPorts": [8081],
+  "portsAttributes": {
+    "8081": {
+      "label": "React Native Packager",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "chmod +x ./gradlew && yes | sdkmanager --licenses || true && echo '环境配置完成！'",
+  "remoteUser": "root"
+}

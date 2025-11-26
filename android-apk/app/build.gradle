@@ -1,0 +1,81 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.sandboxradar.meteor'
+    compileSdk rootProject.compileSdk
+
+    defaultConfig {
+        applicationId "com.sandboxradar.meteor"
+        minSdk rootProject.minSdk
+        targetSdk rootProject.targetSdk
+        versionCode 321000          // v3.2.1.0
+        versionName "3.2.0-60fps"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            cmake {
+                targets "sandbox_radar"
+                arguments "-DANDROID_STL=c++_static",
+                          "-DENABLE_60FPS=ON",
+                          "-DCMAKE_BUILD_TYPE=Release"
+                abiFilters 'arm64-v8a'      // 仅 64 位，减体积
+            }
+        }
+    }
+
+    signingConfigs {
+        release {
+            def keystoreProperties = new Properties()
+            def keystorePropertiesFile = rootProject.file('local.properties')
+            if (keystorePropertiesFile.exists()) {
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+            }
+            storeFile keystoreProperties['RELEASE_STORE_FILE'] ? file(keystoreProperties['RELEASE_STORE_FILE']) : null
+            storePassword keystoreProperties['RELEASE_STORE_PASSWORD']
+            keyAlias keystoreProperties['RELEASE_KEY_ALIAS']
+            keyPassword keystoreProperties['RELEASE_KEY_PASSWORD']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            ndk {
+                debugSymbolLevel 'FULL'   // 上传 Google Play 可拆分
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file('../CMakeLists_simplified.txt')
+            version rootProject.cmakeVersion
+        }
+    }
+
+    buildFeatures {
+        prefab true
+    }
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging false
+        }
+        // 禁止未用资源
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE*'
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    // Protobuf-lite 用于拍卖行
+    implementation 'com.google.protobuf:protobuf-javalite:3.24.4'
+}

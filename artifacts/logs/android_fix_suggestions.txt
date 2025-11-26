@@ -1,0 +1,8 @@
+诊断完成，可能问题包括版本不兼容、SDK/NDK路径错误、依赖库缺失等。
+请按照 android_version_check.txt 和 android_dependencies_report.txt 的内容进行修复。
+
+在Termux环境中，Android构建失败的常见原因:
+- 1. 缺少Android SDK和NDK
+- 2. Gradle配置与Expo项目不兼容
+- 3. 系统缺少必要的构建工具
+- 4. 路径或权限问题

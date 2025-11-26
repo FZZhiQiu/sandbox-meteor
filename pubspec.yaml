@@ -1,0 +1,60 @@
+name: meteorological_sandbox
+description: 高性能气象沙盘模拟器
+version: 0.0.1+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # 核心架构
+  provider: ^6.1.2
+  riverpod: ^2.5.1
+  
+  # 数值计算
+  vector_math: ^2.1.4
+  ml_linalg: ^13.11.32
+  
+  # 文件处理
+  path_provider: ^2.1.3
+  path: ^1.9.0
+  
+  # 图像处理
+  flutter_painter: ^1.0.1
+  image: ^4.2.0
+  
+  # UI 组件
+  cupertino_icons: ^1.0.8
+  
+  # 性能监控
+  flutter_performance_monitor: ^0.1.0
+  
+  # 数值模拟
+  dart_numerics: ^0.0.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.8
+  json_annotation: ^4.8.1
+  json_serializable: ^6.7.1
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/map/
+    - assets/icons/
+    - assets/color_maps/
+    - assets/sample_data/
+  
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Regular.ttf
+        - asset: fonts/Roboto-Bold.ttf
+          weight: 700
