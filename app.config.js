@@ -11,12 +11,40 @@ const bundleId = {
 }[variant];
 
 export default {
-    expo: {
-        name,
-        slug: "happy",
-        version: "1.5.1",
-        runtimeVersion: "18",
-        orientation: "default",
+  name: '气象沙盘模拟器',
+  slug: 'meteorological-sandbox',
+  version: '0.1.0',
+  orientation: 'default',
+  icon: './assets/icon.png',
+  splash: {
+    image: './assets/splash.png',
+    resizeMode: 'contain',
+    backgroundColor: '#2196F3',
+  },
+  platforms: {
+    android: {
+      package: 'com.meteorological.sandbox',
+      versionCode: 1,
+      permissions: [
+        'android.permission.ACCESS_FINE_LOCATION',
+        'android.permission.ACCESS_COARSE_LOCATION',
+        'android.permission.INTERNET',
+      ],
+    },
+    ios: {
+      bundleIdentifier: 'com.meteorological.sandbox',
+      buildNumber: '1',
+    },
+  },
+  extra: {
+    appDescription: '专业级气象沙盘模拟器 - 6大求解器算法，并行计算，60FPS渲染',
+    author: 'iFlow CLI',
+    homepage: 'https://github.com/FZZhiQiu/sandbox-meteor',
+    repository: 'https://github.com/FZZhiQiu/sandbox-meteor.git',
+    license: 'MIT',
+    keywords: ['meteorology', 'weather', 'simulation', 'flutter', 'dart', 'scientific-computing'],
+  },
+}
         icon: "./sources/assets/images/icon.png",
         scheme: "happy",
         userInterfaceStyle: "automatic",

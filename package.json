@@ -1,7 +1,29 @@
 {
-  "name": "happy",
+  "name": "meteorological-sandbox",
+  "displayName": "气象沙盘模拟器",
+  "description": "专业级气象沙盘模拟器 - 6大求解器算法，并行计算，60FPS渲染",
   "main": "index.ts",
   "version": "0.0.1",
+  "homepage": "https://github.com/FZZhiQiu/sandbox-meteor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FZZhiQiu/sandbox-meteor.git"
+  },
+  "keywords": [
+    "meteorology",
+    "weather",
+    "simulation",
+    "flutter",
+    "dart",
+    "scientific-computing",
+    "atmospheric-modeling",
+    "parallel-computing"
+  ],
+  "author": {
+    "name": "FZQ团队",
+    "email": "fzq@example.com"
+  },
+  "license": "MIT",
   "scripts": {
     "happy": "node bin/happy",
     "start": "expo start",

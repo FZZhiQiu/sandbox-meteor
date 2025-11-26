@@ -1,9 +1,32 @@
-/// 商业级气象沙盘模拟器配置
-/// 支持多种性能级别和功能选项
+/// 专业级气象沙盘模拟器配置
+/// 
+/// 提供多级性能配置、物理常数和数值精度设置
+/// 支持自适应设备性能和用户偏好设置
+/// 
+/// 版本: v0.0.1
+/// 构建时间: 2025-11-26
+/// 开发团队: iFlow CLI
 class AppConfig {
+  // 应用基本信息
   static const String appName = '气象沙盘模拟器';
-  static const String version = '2.0.0';
-  static const String buildNumber = '2024.11.25';
+  static const String version = '0.1.0';
+  static const String buildNumber = '2025.11.26';
+  static const String author = 'iFlow CLI';
+  static const String license = 'MIT';
+  
+  // UI配置
+  static const Color primaryColor = Colors.blue;
+  static const Color secondaryColor = Colors.lightBlue;
+  static const bool isDebugMode = true; // 生产环境设为false
+  
+  // 支持的设备配置
+  static const int minAndroidVersion = 21; // Android 5.0
+  static const int targetAndroidVersion = 34; // Android 14
+  static const List<String> supportedArchitectures = [
+    'arm64-v8a',
+    'armeabi-v7a',
+    'x86_64',
+  ];
   
   // 性能级别配置
   static const PerformanceLevel low = PerformanceLevel(

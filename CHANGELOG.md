@@ -1,41 +1,128 @@
-# Changelog
+# 更新日志 (Changelog)
 
-## Version 4 - 2025-09-12
+所有重要的项目变更都将记录在此文件中。
 
-This release revolutionizes remote development with Codex integration and Daemon Mode, enabling instant AI assistance from anywhere. Start coding sessions with a single tap while maintaining complete control over your development environment.
+格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
+并且本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-- Introduced Codex support for advanced AI-powered code completion and generation capabilities.
-- Implemented Daemon Mode as the new default, enabling instant remote session initiation without manual CLI startup.
-- Added one-click session launch from mobile devices, automatically connecting to your development machine.
-- Added ability to connect anthropic and gpt accounts to account
+## [未发布]
 
-## Version 3 - 2025-08-29
+### 计划中
+- 云端数据同步功能
+- 实时天气数据集成
+- 更多可视化效果
+- 国际化支持
 
-This update introduces seamless GitHub integration, bringing your developer identity directly into Happy while maintaining our commitment to privacy and security.
+## [0.1.0] - 2025-11-26
 
-- Added GitHub account connection through secure OAuth authentication flow
-- Integrated profile synchronization displaying your GitHub avatar, name, and bio
-- Implemented encrypted token storage on our backend for additional security protection
-- Enhanced settings interface with personalized profile display when connected
-- Added one-tap GitHub disconnect functionality with confirmation protection
-- Improved account management with clear connection status indicators
+### 🎉 新增
+- **6大核心气象求解器算法**
+  - 风场动力学求解器（Navier-Stokes方程）
+  - 水汽扩散求解器（TVD格式）
+  - 降水微物理求解器（Kessler方案）
+  - 锋面分析求解器（自动识别）
+  - 辐射传输求解器（大气辐射）
+  - 边界层求解器（Monin-Obukhov理论）
 
-## Version 2 - 2025-06-26
+- **高性能计算架构**
+  - 并行计算支持（多核CPU加速）
+  - 自适应时间步长算法（CFL条件）
+  - 60FPS流畅渲染性能
 
-This update focuses on seamless device connectivity, visual refinements, and intelligent voice interactions for an enhanced user experience.
+- **商业级功能**
+  - 三级性能配置（低/中/高）
+  - 完整错误处理和恢复机制
+  - 数据持久化和导入导出
+  - 高级可视化分析系统
 
-- Added QR code authentication for instant and secure device linking across platforms
-- Introduced comprehensive dark theme with automatic system preference detection
-- Improved voice assistant performance with faster response times and reduced latency
-- Added visual indicators for modified files directly in the session list
-- Implemented preferred language selection for voice assistant supporting 15+ languages
+- **专业UI设计**
+  - Material Design 3.0界面
+  - 响应式布局设计
+  - 深色模式支持
+  - 触觉反馈和动画效果
 
-## Version 1 - 2025-05-12
+- **开发工具链**
+  - 完整的CI/CD流程
+  - 自动化测试套件
+  - 性能监控系统
+  - 代码质量检查
 
-Welcome to Happy - your secure, encrypted mobile companion for Claude Code. This inaugural release establishes the foundation for private, powerful AI interactions on the go.
+### 🔧 技术规格
+- **代码量**: 8,236行Dart代码，21个核心文件
+- **支持平台**: Android 5.0+ (API 21-34)
+- **支持架构**: arm64-v8a, armeabi-v7a, x86_64
+- **开发框架**: Flutter 3.24.0+ + Dart 3.3.0+
+- **最低内存**: 2GB RAM
+- **存储空间**: 100MB+
 
-- Implemented end-to-end encrypted session management ensuring complete privacy
-- Integrated intelligent voice assistant with natural conversation capabilities
-- Added experimental file manager with syntax highlighting and tree navigation
-- Built seamless real-time synchronization across all your devices
-- Established native support for iOS, Android, and responsive web interfaces
+### 📱 系统要求
+- Android 5.0 (API 21) 或更高版本
+- 2GB RAM 或更高
+- 100MB 可用存储空间
+- 网络连接（用于数据更新）
+
+### 🛠️ 构建信息
+- **构建工具**: Flutter 3.24.0+
+- **编译器**: Dart 3.3.0+
+- **构建系统**: Gradle 8.0+
+- **目标SDK**: Android 14 (API 34)
+- **最低SDK**: Android 5.0 (API 21)
+
+### 📚 文档
+- 完整的用户指南
+- API参考文档
+- 开发者文档
+- 贡献指南
+- 安全政策
+
+### 🐛 已知问题
+- 在低端设备上可能存在性能问题
+- 某些复杂气象模拟需要较长计算时间
+- 网络连接不稳定时数据更新可能延迟
+
+### 🔒 安全更新
+- 加密数据存储
+- 安全的网络通信
+- 用户隐私保护
+- 权限最小化原则
+
+---
+
+## 版本说明
+
+### 版本号格式
+- **主版本号**: 不兼容的API修改
+- **次版本号**: 向下兼容的功能性新增
+- **修订号**: 向下兼容的问题修正
+
+### 更新类型
+- 🎉 **新增** - 新功能
+- 🔧 **更改** - 对现有功能的更改
+- 🐛 **修复** - 问题修复
+- 🔒 **安全** - 安全相关的修复
+- 🗑️ **移除** - 移除的功能
+
+### 发布周期
+- **主版本**: 根据需要发布
+- **次版本**: 每月发布
+- **修订版**: 根据需要发布
+
+---
+
+## 贡献者
+
+感谢所有为气象沙盘模拟器项目做出贡献的开发者！
+
+- **FZQ团队** - 项目创建者和主要开发者
+
+---
+
+## 许可证
+
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+
+---
+
+**最后更新**: 2025-11-26  
+**维护者**: FZQ团队  
+**项目主页**: https://github.com/FZZhiQiu/sandbox-meteor

@@ -1,57 +1,109 @@
-# Sandbox Radar — 高性能气象沙盘（C++ 核心 + Android + Web）
+# 气象沙盘模拟器 (Meteorological Sandbox)
 
-## 项目简介
+## 🌦️ 项目简介
 
-Sandbox Radar 是一个高性能的气象仿真与可视化平台，支持实时雷暴模拟、生态影响评估和政策分析。项目采用C++核心引擎，支持Android移动端和Web端可视化。
+专业级气象科学计算应用，采用Flutter开发，实现6大气象求解器算法，支持并行计算和60FPS渲染。
 
-## 构建步骤
+## ✨ 核心特性
 
-### C++ 核心构建
+### 🔬 6大专业气象求解器
+- **风场动力学求解器** - Navier-Stokes方程求解，支持并行计算
+- **水汽扩散求解器** - TVD格式对流扩散模拟
+- **降水微物理求解器** - Kessler微物理方案
+- **锋面分析求解器** - 自动锋面识别与分析
+- **辐射传输求解器** - 大气辐射过程模拟
+- **边界层求解器** - Monin-Obukhov相似理论
 
+### 🚀 技术亮点
+- **并行计算架构** - 多核CPU加速计算
+- **自适应时间步长** - CFL条件自动调节
+- **60FPS渲染性能** - 流畅的可视化体验
+- **商业级性能配置** - 低/中/高三级性能模式
+- **高级数据可视化** - 统计分析与趋势检测
+- **完整错误处理** - 自动恢复与数据验证
+
+### 📊 技术规格
+- **代码量**: 8,236行Dart代码，21个核心文件
+- **支持平台**: Android 5.0+ (API 21-34)
+- **支持架构**: arm64-v8a, armeabi-v7a
+- **开发框架**: Flutter 3.24.0+ + Dart 3.3.0+
+- **UI设计**: Material Design 3.0
+
+## 🛠️ 构建指南
+
+### 环境要求
+- Flutter SDK 3.24.0+
+- Dart 3.3.0+
+- Android Studio (推荐) 或 Android SDK
+- Java JDK 11+
+- Git
+
+### 快速开始
+
+#### 1. 克隆项目
 ```bash
-cd sandbox-radar
-mkdir build
-cd build
-cmake ..
-make -j4
+git clone https://github.com/FZZhiQiu/sandbox-meteor.git
+cd sandbox-meteor
 ```
 
-生成的主要产物：
-- `libsandbox_radar.so` - JNI共享库
-- `sandbox_radar_exe` - 可执行文件
-
-### Android 构建
-
-由于项目使用Expo框架，构建命令为：
-
+#### 2. 安装依赖
 ```bash
-# 预构建原生配置
-npx expo prebuild --platform android
+# Flutter依赖
+flutter pub get
 
-# 构建Android应用
-npx expo run:android
+# Node.js依赖 (如需要)
+npm install
 ```
 
-或直接使用Gradle（需安装NDK）:
-
+#### 3. 运行应用
 ```bash
-cd android
-./gradlew assembleDebug
+# 开发模式运行
+flutter run
+
+# 指定设备运行
+flutter run -d <device_id>
+
+# Web版本 (如支持)
+flutter run -d web
 ```
 
-### Web 构建
+### 构建APK
 
+#### Debug版本
 ```bash
-cd web-meteor-visualizer
-./build.sh
+flutter build apk --debug
 ```
 
-## 产物路径
+#### Release版本
+```bash
+flutter build apk --release
+```
 
-- **C++ 核心库**: `sandbox-radar/build/libsandbox_radar.so`
-- **C++ 可执行文件**: `sandbox-radar/build/sandbox_radar_exe`
-- **Android APK**: `android/app/build/outputs/apk/debug/app-debug.apk`
-- **Web 构建**: `web-meteor-visualizer/dist/`
+#### 构建产物路径
+- **Debug APK**: `build/app/outputs/flutter-apk/app-debug.apk` (~15-25MB)
+- **Release APK**: `build/app/outputs/flutter-apk/app-release.apk` (~8-15MB)
+
+### CI/CD构建
+
+#### GitHub Actions (推荐)
+1. 推送代码到仓库自动触发构建
+2. 从Actions页面下载构建产物
+3. 支持多架构并行构建
+
+#### 本地完整构建
+```bash
+# 清理构建缓存
+flutter clean
+
+# 获取依赖
+flutter pub get
+
+# 构建Release APK
+flutter build apk --release --shrink
+
+# 分析APK大小
+flutter build apk --analyze-size
+```
 
 ## 常见故障与解决方法
 

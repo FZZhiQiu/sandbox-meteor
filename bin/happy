@@ -1,6 +1,0 @@
-#!/data/data/com.termux/files/usr/bin/node
-require('child_process').spawnSync(
-  'npm',
-  ['start'],          // 想跑别的命令就改这里
-  { cwd: __dirname + '/..', stdio: 'inherit' }
-);

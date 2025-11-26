@@ -1,9 +1,73 @@
 {
   "expo": {
-    "name": "happy",
-    "slug": "happy",
-    "version": "0.0.1",
-    "plugins": ["@config-plugins/react-native-webrtc"]
+    "name": "气象沙盘模拟器",
+    "slug": "meteorological-sandbox",
+    "version": "0.1.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2196F3"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.meteorological.sandbox",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSCameraUsageDescription": "用于气象数据采集和可视化",
+        "NSLocationWhenInUseUsageDescription": "用于获取位置信息进行本地气象模拟"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#2196F3"
+      },
+      "package": "com.meteorological.sandbox",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.INTERNET",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "允许应用访问相机进行气象数据采集"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "允许应用访问位置信息进行本地气象模拟"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "meteorological-sandbox-project"
+      }
+    },
+    "owner": "meteorological-sandbox",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/meteorological-sandbox-project"
+    }
   }
 }
 
