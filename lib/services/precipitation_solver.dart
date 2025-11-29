@@ -2,12 +2,15 @@ import 'dart:math';
 import '../core/app_config.dart';
 import '../models/meteorology_state.dart';
 import '../utils/math_utils.dart';
+import 'radar_reflectivity_calculator.dart';
 
 /// 降水形成求解器
 /// 基于 Kessler 微物理方案实现水汽→云水→雨水的转化过程
 class PrecipitationSolver {
   final MeteorologyGrid _grid;
   final double _dt;
+  final double _dz; // 垂直分辨率
+  late RadarReflectivityCalculator _radarCalculator;
   
   // Kessler方案参数
   final double _autoconversionThreshold; // 自动转化阈值
@@ -17,10 +20,13 @@ class PrecipitationSolver {
   
   PrecipitationSolver(this._grid)
       : _dt = AppConfig.timeStep,
+        _dz = 200.0, // 垂直网格间距 200m
         _autoconversionThreshold = 0.001,  // 1 g/kg
         _accretionRate = 0.001,
         _collectionRate = 0.0001,
-        _evaporationRate = 0.0001;
+        _evaporationRate = 0.0001 {
+    _radarCalculator = RadarReflectivityCalculator(_grid);
+  }
   
   /// 求解降水过程 - 完整的 Kessler 微物理方案
   /// [qvapor] - 水汽混合比 (kg/kg)
@@ -160,15 +166,15 @@ class PrecipitationSolver {
     _updatePrecipitationRate(precipitationRate);
   }
   
-  /// 计算 Kessler 微物理过程倾向
+  /// 计算 Kessler 微物理过程倾向 (修复: 标准Kessler参数)
   Map<String, double> _calculateKesslerTendencies(
     double qv, double qc, double qr,
     double temp, double press, double w, double height,
   ) {
-    const autoconversionThreshold = 0.0005; // 0.5 g/kg
-    const accretionRate = 0.002; // s⁻¹
-    const evaporationRate = 0.0001; // s⁻¹
-    const collectionRate = 0.001; // s⁻¹
+    const autoconversionThreshold = 0.002; // 2 g/kg (标准值)
+    const accretionRate = 3.0; // 3/s (标准值)
+    const evaporationRate = 0.0005; // s⁻¹
+    const collectionRate = 0.002; // s⁻¹
     
     // 1. 凝结/蒸发过程
     double condensation = 0.0;
@@ -414,62 +420,7 @@ class PrecipitationSolver {
     return autoconversion + collection;
   }
   
-  /// 计算微物理过程 - 完整的 Kessler 方案实现
-  Map<String, double> _calculateMicrophysicsProcesses(
-    double qv, double qc, double qr, double temp, double w, double supersaturation,
-  ) {
-    // Kessler 微物理参数
-    const k1 = 0.001;      // 自动转化系数 1/s
-    const k2 = 2.2;        // 碰并系数 m²/g
-    const k3 = 0.0001;     // 雨水蒸发系数 1/s
-    const qcThreshold = 0.0005; // 云水阈值 g/kg
-    const qrThreshold = 0.0001; // 雨水阈值 g/kg
-    
-    // 1. 凝结/蒸发过程
-    final condensation = _calculateCondensationEvaporation(qv, qc, temp, supersaturation);
-    
-    // 2. 自动转化过程：云水→雨水
-    final autoconversion = _calculateAutoconversion(qc, qcThreshold, k1);
-    
-    // 3. 碰并过程：云水+雨水→雨水
-    final accretion = _calculateAccretion(qc, qr, k2);
-    
-    // 4. 雨水蒸发过程
-    final rainEvaporation = _calculateRainEvaporation(qr, temp, supersaturation, k3);
-    
-    // 5. 上升运动引起的动力凝结
-    final dynamicCondensation = _calculateDynamicCondensation(qv, temp, w);
-    
-    // 6. 冰相过程（温度低于0°C时的简化处理）
-    final iceProcesses = _calculateIceProcesses(qc, qr, temp);
-    
-    // 7. 计算各变量的倾向
-    final qvaporTendency = -condensation - rainEvaporation + dynamicCondensation - iceProcesses['sublimation']!;
-    final qcloudTendency = condensation - autoconversion - accretion - iceProcesses['deposition']!;
-    final qrainTendency = autoconversion + accretion + rainEvaporation + iceProcesses['melting']!;
-    
-    // 8. 质量守恒检查
-    final totalChange = qvaporTendency + qcloudTendency + qrainTendency;
-    if (totalChange.abs() > 1e-10) {
-      // 归一化保证质量守恒
-      final normalization = 1.0 - totalChange / (qv + qc + qr + 1e-10);
-      qvaporTendency *= normalization;
-      qcloudTendency *= normalization;
-      qrainTendency *= normalization;
-    }
-    
-    return {
-      'qvapor_tendency': qvaporTendency,
-      'qcloud_tendency': qcloudTendency,
-      'qrain_tendency': qrainTendency,
-      'condensation': condensation,
-      'autoconversion': autoconversion,
-      'accretion': accretion,
-      'rain_evaporation': rainEvaporation,
-      'dynamic_condensation': dynamicCondensation,
-      'ice_processes': iceProcesses,
-    };
-  }
+  
   
   /// 计算凝结/蒸发过程
   double _calculateCondensationEvaporation(
@@ -507,7 +458,8 @@ class PrecipitationSolver {
   
   /// 计算碰并过程
   double _calculateAccretion(double qc, double qr, double k2) {
-    if (qc > qrThreshold && qr > 0) {
+    const qrThreshold = 0.0001;
+    if (qc > 0 && qr > qrThreshold) {
       // 线性碰并率
       return k2 * qc * qr;
     }
@@ -590,33 +542,41 @@ class PrecipitationSolver {
     return processes;
   }
   
-  /// 改进的雨水下落速度计算
+  /// 改进的雨水下落速度计算 (修复: Marshall-Palmer关系)
   double _calculateRainFallSpeed(double qr) {
-    if (qr <= 0) return 0.0;
+    if (qr <= 0.0) return 0.0;
     
-    // 基于雨水含量的经验关系
-    const v0 = 4.0;  // 基础速度 m/s
-    const a = 2000.0; // 系数
+    // 基于雨水含量的Marshall-Palmer关系
+    final double lambda = 41.0 * pow(qr * 1000.0, -0.21); // m⁻¹
+    final double v0 = 9.65 - 10.3 * exp(-0.6 * lambda); // m/s
     
-    final fallSpeed = v0 + a * qr;
+    // 考虑空气密度修正
+    final double rho0 = 1.225; // 标准空气密度 kg/m³
+    final double rho = 1.0; // 简化，实际应该随高度变化
+    final double densityCorrection = sqrt(rho0 / rho);
     
-    // 考虑高度影响（简化）
-    const maxFallSpeed = 10.0; // m/s
-    return min(fallSpeed, maxFallSpeed);
+    return v0 * densityCorrection;
   }
   
-  /// 计算饱和水汽混合比
+  /// 计算饱和水汽混合比 (修复: 正确的单位和公式)
   double _calculateSaturationMixingRatio(double temperature, double pressure) {
     final tempCelsius = temperature - 273.15;
-    double es;
+    double es; // 饱和水汽压 (hPa)
     
-    if (tempCelsius >= 0) {
-      es = 6.1078 * exp(17.27 * tempCelsius / (tempCelsius + 237.3));
+    // 使用改进的Magnus公式
+    if (tempCelsius >= 0.0) {
+      // 水面饱和水汽压
+      es = 6.1121 * exp(17.502 * tempCelsius / (tempCelsius + 240.97));
     } else {
-      es = 6.1078 * exp(21.875 * tempCelsius / (tempCelsius + 265.5));
+      // 冰面饱和水汽压
+      es = 6.1121 * exp(22.587 * tempCelsius / (tempCelsius + 273.86));
     }
     
-    return 0.622 * es * 100 / (pressure - es * 100);
+    // 转换为Pa并计算混合比
+    es *= 100.0; // hPa -> Pa
+    const double epsilon = 0.622; // 水汽分子量比
+    
+    return epsilon * es / (pressure - es);
   }
   
   /// 计算雨水下落速度
@@ -684,18 +644,78 @@ class PrecipitationSolver {
   bool checkStability(List<List<List<double>>> qvapor,
                       List<List<List<double>>> qcloud,
                       List<List<List<double>>> qrain) {
-    // 检查水物质含量的合理性
+    const maxTotalWater = 0.05; // 最大50g/kg
+    const maxSingleComponent = 0.03; // 单个组分最大30g/kg
+    
     for (int k = 0; k < _grid.nz; k++) {
       for (int j = 0; j < _grid.ny; j++) {
         for (int i = 0; i < _grid.nx; i++) {
-          final totalWater = qvapor[k][j][i] + qcloud[k][j][i] + qrain[k][j][i];
-          if (totalWater < 0 || totalWater > 0.05) { // 最大50g/kg
+          final qv = qvapor[k][j][i];
+          final qc = qcloud[k][j][i];
+          final qr = qrain[k][j][i];
+          
+          // 检查负值
+          if (qv < 0 || qc < 0 || qr < 0) {
+            return false;
+          }
+          
+          // 检查总水量
+          final totalWater = qv + qc + qr;
+          if (totalWater > maxTotalWater) {
+            return false;
+          }
+          
+          // 检查单个组分
+          if (qv > maxSingleComponent || qc > maxSingleComponent || qr > maxSingleComponent) {
+            return false;
+          }
+          
+          // 检查相对湿度合理性
+          if (qv > 0.02) { // 水汽超过20g/kg不合理
             return false;
           }
         }
       }
     }
     return true;
+  }
+  
+  /// 获取雷达反射率场
+  Map<String, dynamic> getRadarReflectivityField(
+    List<List<List<double>>> temperature,
+  ) {
+    // 创建冰水场（简化处理）
+    final qice = List.generate(_grid.nz, (k) => 
+        List.generate(_grid.ny, (j) => List.filled(_grid.nx, 0.0)));
+    
+    // 在温度低于0°C的区域添加冰相
+    for (int k = 0; k < _grid.nz; k++) {
+      for (int j = 0; j < _grid.ny; j++) {
+        for (int i = 0; i < _grid.nx; i++) {
+          final temp = temperature[k][j][i];
+          if (temp < 273.15 && _qrain != null) {
+            // 简化：假设部分雨水转化为冰
+            qice[k][j][i] = _qrain![k][j][i] * 0.1;
+          }
+        }
+      }
+    }
+    
+    return _radarCalculator.generateRadarProducts(
+      _qrain ?? _createEmptyField(),
+      _qcloud ?? _createEmptyField(),
+      qice,
+      temperature,
+      _grid.getVariableData(MeteorologyVariable.uWind) ?? _createEmptyField(),
+      _grid.getVariableData(MeteorologyVariable.vWind) ?? _createEmptyField(),
+      _grid.getVariableData(MeteorologyVariable.wWind) ?? _createEmptyField(),
+    );
+  }
+  
+  /// 创建空场
+  List<List<List<double>>> _createEmptyField() {
+    return List.generate(_grid.nz, (k) =>
+        List.generate(_grid.ny, (j) => List.filled(_grid.nx, 0.0)));
   }
   
   /// 复制网格数据

@@ -1,0 +1,20 @@
+{
+  "name": "meteorological-dashboard",
+  "version": "1.0.0",
+  "description": "气象数据仪表板演示",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build": "echo 'Building meteorological dashboard...'",
+    "dev": "nodemon index.js"
+  },
+  "keywords": ["meteorology", "dashboard", "vercel"],
+  "author": "Weather Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

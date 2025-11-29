@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../models/meteorology_state.dart';
 import '../core/app_config.dart';
+import 'weather_chart_painter.dart';
 
 /// 高级可视化和分析组件
 /// 提供专业的气象数据可视化和分析功能
@@ -434,25 +435,12 @@ class _AdvancedVisualizationState extends State<AdvancedVisualization>
         color: Colors.grey.shade100,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.insert_chart,
-              size: 48,
-              color: Colors.grey,
-            ),
-            SizedBox(height: 8),
-            Text(
-              '图表区域',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-              ),
-            ),
-          ],
+      child: CustomPaint(
+        painter: WeatherChartPainter(
+          data: _generateChartData(),
+          selectedVariable: widget.selectedVariable,
         ),
+        child: Container(),
       ),
     );
   }
@@ -729,6 +717,58 @@ class _AdvancedVisualizationState extends State<AdvancedVisualization>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('导出为 $format 格式')),
     );
+  }
+  
+  List<ChartDataPoint> _generateChartData() {
+    final random = Random();
+    final data = <ChartDataPoint>[];
+    
+    // 基于实际气象数据生成图表数据
+    final gridData = widget.state.grid.getVariableData(widget.selectedVariable);
+    if (gridData != null) {
+      // 提取中心剖面的数据
+      final centerX = widget.state.grid.nx ~/ 2;
+      final centerY = widget.state.grid.ny ~/ 2;
+      
+      for (int k = 0; k < widget.state.grid.nz; k++) {
+        final value = gridData[k][centerY][centerX];
+        data.add(ChartDataPoint(
+          x: k.toDouble(),
+          value: value,
+        ));
+      }
+    } else {
+      // 如果没有实际数据，生成模拟数据
+      for (int i = 0; i < 20; i++) {
+        data.add(ChartDataPoint(
+          x: i.toDouble(),
+          value: _getSimulatedValue(i),
+        ));
+      }
+    }
+    
+    return data;
+  }
+  
+  double _getSimulatedValue(int index) {
+    switch (widget.selectedVariable) {
+      case MeteorologyVariable.temperature:
+        return 25.0 - index * 0.5 + Random().nextDouble() * 2;
+      case MeteorologyVariable.pressure:
+        return 1013.0 - index * 10 + Random().nextDouble() * 5;
+      case MeteorologyVariable.humidity:
+        return 60.0 + Random().nextDouble() * 30;
+      case MeteorologyVariable.uWind:
+        return 5.0 + Random().nextDouble() * 10;
+      case MeteorologyVariable.vWind:
+        return 2.0 + Random().nextDouble() * 5;
+      case MeteorologyVariable.wWind:
+        return Random().nextDouble() * 2 - 1;
+      case MeteorologyVariable.precipitation:
+        return Random().nextDouble() * 5;
+      default:
+        return Random().nextDouble() * 100;
+    }
   }
   
   String _getVariableDisplayName(MeteorologyVariable variable) {

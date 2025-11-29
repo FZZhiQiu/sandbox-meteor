@@ -1,0 +1,38 @@
+[
+  {
+    "CAPE": 0,
+    "temperature_c": 0.0,
+    "dewpoint_c": -5.0,
+    "pressure_hpa": 1010,
+    "classification": "弱对流",
+    "timestamp": "2025-11-27T00:33:27.882919",
+    "case_name": "冬季稳定大气"
+  },
+  {
+    "CAPE": 60.0,
+    "temperature_c": 15.0,
+    "dewpoint_c": 7.0,
+    "pressure_hpa": 1005,
+    "classification": "弱对流",
+    "timestamp": "2025-11-27T00:33:27.882944",
+    "case_name": "春季不稳定大气"
+  },
+  {
+    "CAPE": 2850.0,
+    "temperature_c": 30.0,
+    "dewpoint_c": 22.0,
+    "pressure_hpa": 995,
+    "classification": "很强对流",
+    "timestamp": "2025-11-27T00:33:27.882963",
+    "case_name": "夏季强对流"
+  },
+  {
+    "CAPE": 460.0,
+    "temperature_c": 20.0,
+    "dewpoint_c": 12.0,
+    "pressure_hpa": 1000,
+    "classification": "中等对流",
+    "timestamp": "2025-11-27T00:33:27.882977",
+    "case_name": "秋季中等对流"
+  }
+]

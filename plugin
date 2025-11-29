@@ -1,0 +1,12 @@
+#!/bin/bash
+# 开发辅助插件管理器快捷启动脚本
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PYTHON_SCRIPT="$SCRIPT_DIR/dev_plugin_manager.py"
+
+if [ -f "$PYTHON_SCRIPT" ]; then
+    python "$PYTHON_SCRIPT" "$@"
+else
+    echo "❌ 插件管理器不存在: $PYTHON_SCRIPT"
+    exit 1
+fi

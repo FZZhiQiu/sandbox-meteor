@@ -1,0 +1,8 @@
+{
+  "CAPE": 1600.0,
+  "temperature_c": 25.0,
+  "dewpoint_c": 15.0,
+  "pressure_hpa": 1000,
+  "classification": "强对流",
+  "timestamp": "2025-11-27T00:33:27.882328"
+}

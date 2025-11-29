@@ -58,12 +58,13 @@ class AppConfig {
   
   // 物理常数（国际标准）
   static const double gravity = 9.80665;  // 重力加速度 m/s²
-  static const double gasConstant = 287.058;  // 气体常数 J/(kg·K)
-  static const double specificHeat = 1004.685;  // 定压比热 J/(kg·K)
+  static const double gasConstant = 287.05;  // 气体常数 J/(kg·K)
+  static const double specificHeat = 1004.0;  // 定压比热 J/(kg·K)
   static const double standardPressure = 101325.0;  // 标准大气压 Pa
   static const double standardTemperature = 288.15;  // 标准温度 K (15°C)
   static const double boltzmannConstant = 1.380649e-23;  // 玻尔兹曼常数 J/K
   static const double avogadroNumber = 6.02214076e23;  // 阿伏伽德罗常数 1/mol
+  static const double solarConstant = 1361.0;  // 太阳常数 W/m² (最新卫星观测值)
   
   // 模拟参数
   static const int simulationInterval = 3;  // 模拟更新间隔 秒

@@ -2,72 +2,53 @@
   "expo": {
     "name": "气象沙盘模拟器",
     "slug": "meteorological-sandbox",
-    "version": "0.1.0",
-    "orientation": "default",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
+    "version": "1.0.0",
+    "platforms": [
+      "android",
+      "ios",
+      "web"
+    ],
+    "orientation": "portrait",
+    "icon": "./assets/icons/app-icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/splashscreen_logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#2196F3"
+      "backgroundColor": "#667eea"
+    },
+    "plugins": [
+      "expo-camera",
+      "expo-status-bar",
+      "expo-secure-store",
+      "expo-linear-gradient"
+    ],
+    "updates": {
+      "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.meteorological.sandbox",
-      "buildNumber": "1",
-      "infoPlist": {
-        "NSCameraUsageDescription": "用于气象数据采集和可视化",
-        "NSLocationWhenInUseUsageDescription": "用于获取位置信息进行本地气象模拟"
-      }
+      "bundleIdentifier": "com.sandbox.meteorological",
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#2196F3"
+        "foregroundImage": "./assets/icons/adaptive-icon.png",
+        "backgroundColor": "#667eea"
       },
-      "package": "com.meteorological.sandbox",
-      "versionCode": 1,
-      "permissions": [
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.INTERNET",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.READ_EXTERNAL_STORAGE"
-      ]
-    },
-    "web": {
-      "favicon": "./assets/favicon.png",
-      "bundler": "metro"
-    },
-    "plugins": [
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "允许应用访问相机进行气象数据采集"
-        }
-      ],
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "允许应用访问位置信息进行本地气象模拟"
-        }
-      ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "meteorological-sandbox-project"
+      "package": "com.sandbox.meteorological",
+      "versionCode": "1",
+      "minSdkVersion": 21,
+      "compileSdkVersion": "34",
+      "targetSdkVersion": 34,
+      "config": {
+        "useLegacyPackaging": false
       }
     },
-    "owner": "meteorological-sandbox",
-    "runtimeVersion": {
-      "policy": "sdkVersion"
+    "web": {
+      "favicon": "./assets/icons/favicon.ico",
+      "bundler": "metro"
     },
-    "updates": {
-      "url": "https://u.expo.dev/meteorological-sandbox-project"
-    }
+    "scheme": "meteo-sandbox"
   }
 }
-

@@ -1,0 +1,21 @@
+{
+  "installed_plugins": {
+    "project-template": {
+      "name": "项目模板生成器",
+      "install_time": "2025-11-27T00:40:19.884543",
+      "version": "1.0.0"
+    },
+    "code-formatter": {
+      "name": "代码格式化工具",
+      "install_time": "2025-11-27T00:41:04.428365",
+      "version": "1.0.0"
+    },
+    "linter": {
+      "name": "代码检查工具",
+      "install_time": "2025-11-27T00:45:21.404606",
+      "version": "1.0.0"
+    }
+  },
+  "plugin_settings": {},
+  "last_update": "2025-11-27T00:40:16.768839"
+}
