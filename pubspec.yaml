@@ -15,7 +15,7 @@ dependencies:
   
   # 状态管理与架构
   provider: ^6.1.2
-  riverpod: ^2.5.1
+  flutter_riverpod: ^2.5.1
   zustand: ^0.2.0
   
   # 高性能数值计算
@@ -55,12 +55,34 @@ dependencies:
   http: ^1.2.2
   dio: ^5.4.3+1
   
+  # AI集成
+  ai_meteorology_service:
+    path: lib/services/
+  
   # 工具库
   intl: ^0.19.0
   logger: ^2.4.0
   equatable: ^2.0.5
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  # 构建优化工具
+  build_runner: ^2.4.7
+  build_runner_core: ^7.2.11
+  source_gen: ^1.4.0
+  json_annotation: ^4.8.1
+  json_serializable: ^6.7.1
+  
+  # 代码分析工具
+  flutter_lints: ^3.0.1
+  very_good_analysis: ^5.1.0
+  
+  # 性能分析
+  flutter_driver: ^0.1.3
+  integration_test:
+    sdk: flutter
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0

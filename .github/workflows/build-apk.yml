@@ -1,0 +1,54 @@
+name: Build Flutter APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+        cache: true
+        
+    - name: Install dependencies
+      run: flutter pub get
+      
+    - name: Build APK
+      run: flutter build apk --release --shrink
+      
+    - name: Build APK Split
+      run: flutter build apk --release --split-per-abi --shrink
+      
+    - name: Upload APK artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-apk
+        path: build/app/outputs/flutter-apk/app-release.apk
+        
+    - name: Upload APK Split artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: split-apks
+        path: build/app/outputs/flutter-apk/app-*.apk
+        
+    - name: Get APK info
+      run: |
+        echo "APK Size: $(du -h build/app/outputs/flutter-apk/app-release.apk | cut -f1)"
+        ls -la build/app/outputs/flutter-apk/
