@@ -80,12 +80,11 @@ dev_dependencies:
   very_good_analysis: ^5.1.0
   
   # 性能分析
-  flutter_driver: ^0.1.3
+  flutter_driver:
+    sdk: flutter
   integration_test:
     sdk: flutter
   mockito: ^5.4.4
-  golden_toolkit: ^0.15.0
-  benchmark_harness: ^2.2.2
 
 flutter:
   uses-material-design: true
