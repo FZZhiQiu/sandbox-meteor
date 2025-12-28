@@ -55,9 +55,7 @@ dependencies:
   http: ^1.2.2
   dio: ^5.4.3+1
   
-  # AI集成
-  ai_meteorology_service:
-    path: lib/services/
+  
   
   # 工具库
   intl: ^0.19.0
